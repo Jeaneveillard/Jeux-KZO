@@ -176,8 +176,8 @@ console.info(`[copy-stockfish] ${files.length} fichiers copiés dans public/stoc
 
 Run :
 ```bash
-npm install preact@^10.29.8 chess.js@1.4.0
-npm install -D vite@^8.3.0 @preact/preset-vite@^2.10.6 typescript@~6.0.2 @types/node@^24.13.3 vitest@^5.0.1 @vitest/coverage-v8@^5.0.1 jsdom@^30.1.1 @testing-library/preact@^3.2.4 @playwright/test@^1.63.0 stockfish@19.0.0 @lichess-org/chessground@10.2.0 vite-plugin-pwa@^1.3.0 @vite-pwa/assets-generator@^2.0.0
+npm install preact@^10.29.8 && npm install --save-exact chess.js@1.4.0
+npm install -D vite@^8.3.0 @preact/preset-vite@^2.10.6 typescript@~6.0.2 @types/node@^24.13.3 vitest@^5.0.1 @vitest/coverage-v8@^5.0.1 jsdom@^30.1.1 @testing-library/preact@^3.2.4 @playwright/test@^1.63.0 stockfish@19.0.0 @lichess-org/chessground@10.2.0 vite-plugin-pwa@^1.3.0 @vite-pwa/assets-generator@^1.0.4
 node scripts/copy-stockfish.mjs
 ```
 Expected : la dernière commande affiche `[copy-stockfish] 2 fichiers copiés dans public/stockfish/`. (Le paquet `stockfish` pèse ~200 Mo dans `node_modules` ; seuls ~1,8 Mo sont copiés.)
