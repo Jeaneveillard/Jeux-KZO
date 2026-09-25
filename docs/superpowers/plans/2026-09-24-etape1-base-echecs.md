@@ -121,7 +121,7 @@ Jeux/
 - Consumes: rien.
 - Produces: scripts npm `dev`, `build`, `preview`, `test`, `test:coverage`, `test:strength`, `e2e`, `pieces`, `icons` ; `logWarning(message: string, error?: unknown): void` ; toutes les classes CSS utilisées par la suite.
 
-- [ ] **Step 1 : Créer `package.json`**
+- [x] **Step 1 : Créer `package.json`**
 
 ```json
 {
@@ -146,7 +146,7 @@ Jeux/
 }
 ```
 
-- [ ] **Step 2 : Créer `scripts/copy-stockfish.mjs`**
+- [x] **Step 2 : Créer `scripts/copy-stockfish.mjs`**
 
 ```js
 // Copie la version « lite single-thread » de Stockfish dans public/stockfish/
@@ -172,7 +172,7 @@ for (const file of files) {
 console.info(`[copy-stockfish] ${files.length} fichiers copiés dans public/stockfish/`);
 ```
 
-- [ ] **Step 3 : Installer les dépendances**
+- [x] **Step 3 : Installer les dépendances**
 
 Run :
 ```bash
@@ -182,7 +182,7 @@ node scripts/copy-stockfish.mjs
 ```
 Expected : la dernière commande affiche `[copy-stockfish] 2 fichiers copiés dans public/stockfish/`. (Le paquet `stockfish` pèse ~200 Mo dans `node_modules` ; seuls ~1,8 Mo sont copiés.)
 
-- [ ] **Step 4 : Créer les fichiers TypeScript**
+- [x] **Step 4 : Créer les fichiers TypeScript**
 
 `tsconfig.json` :
 ```json
@@ -247,7 +247,7 @@ Expected : la dernière commande affiche `[copy-stockfish] 2 fichiers copiés da
 }
 ```
 
-- [ ] **Step 5 : Créer `vite.config.ts`**
+- [x] **Step 5 : Créer `vite.config.ts`**
 
 ```ts
 import preact from '@preact/preset-vite';
@@ -279,7 +279,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 6 : Créer `index.html`**
+- [x] **Step 6 : Créer `index.html`**
 
 ```html
 <!doctype html>
@@ -298,7 +298,7 @@ export default defineConfig({
 </html>
 ```
 
-- [ ] **Step 7 : Créer `src/app/log.ts`**
+- [x] **Step 7 : Créer `src/app/log.ts`**
 
 ```ts
 // Journalisation des erreurs non bloquantes, visible seulement en développement.
@@ -309,7 +309,7 @@ export function logWarning(message: string, error?: unknown): void {
 }
 ```
 
-- [ ] **Step 8 : Créer `src/styles/global.css`** (tous les styles de l'app, utilisés par les tâches suivantes)
+- [x] **Step 8 : Créer `src/styles/global.css`** (tous les styles de l'app, utilisés par les tâches suivantes)
 
 ```css
 :root {
@@ -413,7 +413,7 @@ p { margin: 6px 0; }
 .intro p { font-size: 1.05rem; }
 ```
 
-- [ ] **Step 9 : Écrire le test qui échoue**
+- [x] **Step 9 : Écrire le test qui échoue**
 
 `tests/unit/setup.ts` :
 ```ts
@@ -441,12 +441,12 @@ describe('App', () => {
 });
 ```
 
-- [ ] **Step 10 : Lancer le test pour vérifier qu'il échoue**
+- [x] **Step 10 : Lancer le test pour vérifier qu'il échoue**
 
 Run : `npx vitest run tests/unit/app/App.test.tsx`
 Expected : FAIL — `Failed to resolve import "../../../src/app/App"`.
 
-- [ ] **Step 11 : Implémentation minimale**
+- [x] **Step 11 : Implémentation minimale**
 
 `src/app/App.tsx` (remplacé à la Tâche 10) :
 ```tsx
@@ -472,14 +472,14 @@ if (!root) {
 render(<App />, root);
 ```
 
-- [ ] **Step 12 : Vérifier test, typage et build**
+- [x] **Step 12 : Vérifier test, typage et build**
 
 Run : `npx vitest run tests/unit/app/App.test.tsx`
 Expected : PASS (1 test).
 Run : `npm run build`
 Expected : build réussi, dossier `dist/` créé, aucune erreur TypeScript.
 
-- [ ] **Step 13 : Licence et `.gitignore`**
+- [x] **Step 13 : Licence et `.gitignore`**
 
 ```bash
 cp node_modules/stockfish/Copying.txt LICENSE
@@ -489,7 +489,7 @@ Ajouter à la fin de `.gitignore` :
 public/stockfish/
 ```
 
-- [ ] **Step 14 : Commit**
+- [x] **Step 14 : Commit**
 
 ```bash
 git add package.json package-lock.json tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts index.html LICENSE .gitignore scripts/copy-stockfish.mjs src tests
@@ -512,7 +512,7 @@ git commit -m "chore: squelette Vite + Preact + TypeScript + Vitest"
   - `chess/types.ts` : `PromotionPiece`, `PieceType`, `ChessMove`, `ChessPos`, `ChessPiece`, `MoveInfo`.
   - `chess/adapter.ts` : `START_FEN`, `parseChess(fen, options?)`, `positionKey(fen)`, `toUci(m)`, `fromUci(s)`, `legalMoves(pos)`, `play(pos, m)`, `turnOf(pos)`, `status(pos)`, `listPieces(pos)`, `pieceOn(pos, sq)`, `checkedKingSquare(pos)`, `setTurn(pos, color)`, `isAttacked(pos, sq, by)`, `attackersOf(pos, sq, by)`, `moveInfo(pos, m)`, `chessAdapter`, `chessMoveCodec`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/core/guards.test.ts` :
 ```ts
@@ -653,12 +653,12 @@ describe('adaptateur des échecs', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/core tests/unit/chess/adapter.test.ts`
 Expected : FAIL — modules `src/core/guards`, `src/core/types`, `src/chess/adapter` introuvables.
 
-- [ ] **Step 3 : Écrire `src/core/types.ts`**
+- [x] **Step 3 : Écrire `src/core/types.ts`**
 
 ```ts
 export type Color = 'white' | 'black';
@@ -706,7 +706,7 @@ export function opposite(color: Color): Color {
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/core/guards.ts`**
+- [x] **Step 4 : Écrire `src/core/guards.ts`**
 
 ```ts
 export function isRecord(value: unknown): value is Record<string, unknown> {
@@ -718,7 +718,7 @@ export function isOneOf<T extends string>(value: unknown, values: readonly T[]):
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/chess/types.ts`**
+- [x] **Step 5 : Écrire `src/chess/types.ts`**
 
 ```ts
 import type { Color } from '../core/types';
@@ -752,7 +752,7 @@ export interface MoveInfo {
 }
 ```
 
-- [ ] **Step 6 : Écrire `src/chess/adapter.ts`**
+- [x] **Step 6 : Écrire `src/chess/adapter.ts`**
 
 ```ts
 import { Chess, validateFen, type Square } from 'chess.js';
@@ -898,12 +898,12 @@ export const chessAdapter: GameAdapter<ChessPos, ChessMove> = {
 export const chessMoveCodec = { encode: toUci, decode: fromUci } as const;
 ```
 
-- [ ] **Step 7 : Lancer les tests**
+- [x] **Step 7 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/core tests/unit/chess/adapter.test.ts`
 Expected : PASS (3 + 16 tests).
 
-- [ ] **Step 8 : Commit**
+- [x] **Step 8 : Commit**
 
 ```bash
 git add src/core src/chess/types.ts src/chess/adapter.ts tests/unit/core tests/unit/chess/adapter.test.ts
@@ -928,7 +928,7 @@ git commit -m "feat: types communs et adaptateur des règles d'échecs"
   - `geometry.ts` : `Cell`, `BoardGeometry`, `chessGeometry(orientation)`, `pointToCell(x, y, rect, size)`.
   - `Board.tsx` : `Board`, `BoardPiece`, `BoardArrow`, `BoardProps` (voir le code). Chaque case est un `<rect data-square="e4">`, chaque pièce une `<image data-piece="e4" aria-label="Pion blanc">`.
 
-- [ ] **Step 1 : Extraire les 12 pièces « cburnett »**
+- [x] **Step 1 : Extraire les 12 pièces « cburnett »**
 
 Les pièces de lichess (Colin M.L. Burnett, licence GPLv2+, compatible GPL-3.0) sont embarquées en base64 dans `@lichess-org/chessground`. Créer `scripts/extract-pieces.mjs` :
 
@@ -967,7 +967,7 @@ Pièces « cburnett » par Colin M.L. Burnett, extraites de @lichess-org/chessgr
 Licence : GPLv2 ou ultérieure (https://github.com/lichess-org/lila/blob/master/COPYING.md).
 ```
 
-- [ ] **Step 2 : Écrire les tests qui échouent**
+- [x] **Step 2 : Écrire les tests qui échouent**
 
 `tests/unit/chess/names.test.ts` :
 ```ts
@@ -1133,12 +1133,12 @@ describe('Board', () => {
 });
 ```
 
-- [ ] **Step 3 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 3 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/chess/names.test.ts tests/unit/board`
 Expected : FAIL — modules `names`, `pieces`, `geometry`, `Board` introuvables.
 
-- [ ] **Step 4 : Écrire `src/chess/names.ts`**
+- [x] **Step 4 : Écrire `src/chess/names.ts`**
 
 ```ts
 import type { Color } from '../core/types';
@@ -1177,7 +1177,7 @@ export function sideName(color: Color): string {
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/chess/pieces.ts`**
+- [x] **Step 5 : Écrire `src/chess/pieces.ts`**
 
 ```ts
 import bB from './pieces/bB.svg';
@@ -1202,7 +1202,7 @@ export function pieceImage(color: Color, type: PieceType): string {
 }
 ```
 
-- [ ] **Step 6 : Écrire `src/board/geometry.ts`**
+- [x] **Step 6 : Écrire `src/board/geometry.ts`**
 
 ```ts
 import type { Color } from '../core/types';
@@ -1269,7 +1269,7 @@ export function pointToCell(x: number, y: number, rect: RectLike, size: number):
 }
 ```
 
-- [ ] **Step 7 : Écrire `src/board/Board.tsx`**
+- [x] **Step 7 : Écrire `src/board/Board.tsx`**
 
 ```tsx
 import { useRef, useState } from 'preact/hooks';
@@ -1515,14 +1515,14 @@ export function Board(props: BoardProps) {
 
 Les images et les calques `.overlay` ne reçoivent pas les pointeurs (règles `.board image` et `.overlay` de `global.css`) : le toucher atteint toujours la case `<rect>`.
 
-- [ ] **Step 8 : Lancer les tests**
+- [x] **Step 8 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/chess/names.test.ts tests/unit/board`
 Expected : PASS (4 + 4 + 6 tests).
 Run : `npx tsc -b`
 Expected : aucune erreur.
 
-- [ ] **Step 9 : Commit**
+- [x] **Step 9 : Commit**
 
 ```bash
 git add scripts/extract-pieces.mjs src/chess/pieces src/chess/names.ts src/chess/pieces.ts src/board tests/unit/chess/names.test.ts tests/unit/board
@@ -1544,7 +1544,7 @@ git commit -m "feat: pièces SVG, noms français et plateau SVG générique"
   - `view.ts` : `chessBoardPieces(pos): BoardPiece[]`, `capturedPieces(pos): Record<Color, readonly PieceType[]>`.
   - `PromotionPicker` : props `{ color: Color; choices: readonly ChessMove[]; onPick(move); onCancel() }`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/board/move-input.test.ts` :
 ```ts
@@ -1647,12 +1647,12 @@ describe('PromotionPicker', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/board/move-input.test.ts tests/unit/chess/view.test.ts tests/unit/app/PromotionPicker.test.tsx`
 Expected : FAIL — modules introuvables.
 
-- [ ] **Step 3 : Écrire `src/board/move-input.ts`**
+- [x] **Step 3 : Écrire `src/board/move-input.ts`**
 
 ```ts
 export interface MoveShape {
@@ -1695,7 +1695,7 @@ export function dropPiece<M extends MoveShape>(from: string, to: string, legal: 
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/chess/view.ts`**
+- [x] **Step 4 : Écrire `src/chess/view.ts`**
 
 ```ts
 import type { BoardPiece } from '../board/Board';
@@ -1728,7 +1728,7 @@ export function capturedPieces(pos: ChessPos): Readonly<Record<Color, readonly P
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/app/components/PromotionPicker.tsx`**
+- [x] **Step 5 : Écrire `src/app/components/PromotionPicker.tsx`**
 
 ```tsx
 import type { Color } from '../../core/types';
@@ -1770,12 +1770,12 @@ export function PromotionPicker({ color, choices, onPick, onCancel }: PromotionP
 }
 ```
 
-- [ ] **Step 6 : Lancer les tests**
+- [x] **Step 6 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/board/move-input.test.ts tests/unit/chess/view.test.ts tests/unit/app/PromotionPicker.test.tsx`
 Expected : PASS (7 + 2 + 2 tests).
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/board/move-input.ts src/chess/view.ts src/app/components/PromotionPicker.tsx tests/unit/board/move-input.test.ts tests/unit/chess/view.test.ts tests/unit/app/PromotionPicker.test.tsx
@@ -1799,7 +1799,7 @@ git commit -m "feat: saisie des coups au toucher, vue du plateau et choix de pro
   - `stockfish-client.ts` : `UciOptionValue`, `SearchRequest { fen; go; options; timeoutMs }`, `SearchResult { bestMove: string | null; lines: readonly UciInfo[] }` (lignes triées par `multipv`), `class StockfishClient { constructor(createTransport, initTimeoutMs?); search(request, signal?): Promise<SearchResult>; restart(): void }`.
 - Test helper `tests/unit/chess/engine/fake-transport.ts` : `FakeTransport`, `standardResponder(goLines)` — réutilisés à la Tâche 6.
 
-- [ ] **Step 1 : Écrire le faux moteur de test**
+- [x] **Step 1 : Écrire le faux moteur de test**
 
 `tests/unit/chess/engine/fake-transport.ts` :
 ```ts
@@ -1853,7 +1853,7 @@ export function standardResponder(goLines: (command: string) => readonly string[
 }
 ```
 
-- [ ] **Step 2 : Écrire les tests qui échouent**
+- [x] **Step 2 : Écrire les tests qui échouent**
 
 `tests/unit/chess/engine/uci.test.ts` :
 ```ts
@@ -2025,12 +2025,12 @@ describe('StockfishClient', () => {
 });
 ```
 
-- [ ] **Step 3 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 3 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/chess/engine`
 Expected : FAIL — modules `uci`, `errors`, `stockfish-client`, `transport` introuvables.
 
-- [ ] **Step 4 : Écrire `src/chess/engine/uci.ts`**
+- [x] **Step 4 : Écrire `src/chess/engine/uci.ts`**
 
 ```ts
 import type { Evaluation } from '../../core/types';
@@ -2091,7 +2091,7 @@ export function evaluationOf(info: UciInfo | undefined): Evaluation {
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/chess/engine/errors.ts`**
+- [x] **Step 5 : Écrire `src/chess/engine/errors.ts`**
 
 ```ts
 export class EngineLoadError extends Error {
@@ -2131,7 +2131,7 @@ export function engineErrorMessage(error: unknown): string {
 }
 ```
 
-- [ ] **Step 6 : Écrire `src/chess/engine/transport.ts`**
+- [x] **Step 6 : Écrire `src/chess/engine/transport.ts`**
 
 ```ts
 /** Canal texte vers un moteur UCI (Web Worker dans le navigateur, module WASM dans Node). */
@@ -2169,7 +2169,7 @@ export function createWorkerTransport(url: string): UciTransport {
 }
 ```
 
-- [ ] **Step 7 : Écrire `src/chess/engine/stockfish-client.ts`**
+- [x] **Step 7 : Écrire `src/chess/engine/stockfish-client.ts`**
 
 ```ts
 import { EngineAbortError, EngineLoadError, EngineTimeoutError } from './errors';
@@ -2311,12 +2311,12 @@ export class StockfishClient {
 }
 ```
 
-- [ ] **Step 8 : Lancer les tests**
+- [x] **Step 8 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/chess/engine`
 Expected : PASS (5 + 10 tests).
 
-- [ ] **Step 9 : Commit**
+- [x] **Step 9 : Commit**
 
 ```bash
 git add src/chess/engine tests/unit/chess/engine
@@ -2339,7 +2339,7 @@ git commit -m "feat: client UCI pour Stockfish avec délais, annulation et relan
   - `chess-engine.ts` : `ChessEngineOptions { rng?; sleep?; now?; levels? }`, `class ChessEngine implements Engine<ChessPos, ChessMove>` avec `bestMove(pos, level, signal)` et `analyse(pos, depth)`.
   - `index.ts` : `STOCKFISH_URL`, `getChessEngine(): ChessEngine`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/chess/engine/levels.test.ts` :
 ```ts
@@ -2521,12 +2521,12 @@ describe('ChessEngine', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/chess/engine/levels.test.ts tests/unit/chess/engine/faible.test.ts tests/unit/chess/engine/chess-engine.test.ts`
 Expected : FAIL — modules `levels`, `faible`, `chess-engine` introuvables.
 
-- [ ] **Step 3 : Écrire `src/chess/engine/levels.ts`**
+- [x] **Step 3 : Écrire `src/chess/engine/levels.ts`**
 
 ```ts
 import type { Level } from '../../core/types';
@@ -2575,7 +2575,7 @@ export const HINT_DEPTH = 12;
 export const BLUNDER_DEPTH = 10;
 ```
 
-- [ ] **Step 4 : Écrire `src/chess/engine/faible.ts`**
+- [x] **Step 4 : Écrire `src/chess/engine/faible.ts`**
 
 ```ts
 import { legalMoves, listPieces, play, toUci, turnOf } from '../adapter';
@@ -2613,7 +2613,7 @@ export function pickFaibleMove(lines: readonly UciInfo[], safePool: readonly str
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/chess/engine/chess-engine.ts`**
+- [x] **Step 5 : Écrire `src/chess/engine/chess-engine.ts`**
 
 ```ts
 import type { Engine, Evaluation, Level } from '../../core/types';
@@ -2689,7 +2689,7 @@ export class ChessEngine implements Engine<ChessPos, ChessMove> {
 }
 ```
 
-- [ ] **Step 6 : Écrire `src/chess/engine/index.ts`**
+- [x] **Step 6 : Écrire `src/chess/engine/index.ts`**
 
 ```ts
 import { ChessEngine } from './chess-engine';
@@ -2709,12 +2709,12 @@ export function getChessEngine(): ChessEngine {
 }
 ```
 
-- [ ] **Step 7 : Lancer les tests**
+- [x] **Step 7 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/chess/engine`
 Expected : PASS (tous les tests du dossier, dont 4 + 5 + 10 nouveaux).
 
-- [ ] **Step 8 : Commit**
+- [x] **Step 8 : Commit**
 
 ```bash
 git add src/chess/engine tests/unit/chess/engine
@@ -2735,7 +2735,7 @@ git commit -m "feat: niveaux Faible/Moyen/Expert et moteur d'échecs Stockfish"
   - `hint.ts` : `HintReason = 'mate' | 'promotion' | 'capture' | 'check' | 'escape' | 'best'`, `hintReason(pos, move)`, `hintText(pos, move): string`.
   - `blunder.ts` : `BLUNDER_THRESHOLD_CP = 200`, `BlunderVerdict = { blunder: false } | { blunder: true; message: string }`, `detectBlunder(pos, move, before, afterForOpponent): BlunderVerdict`. `before` = évaluation de `pos` pour le joueur ; `afterForOpponent` = évaluation de la position après le coup, du point de vue de l'adversaire (c'est ce que renvoie `Engine.analyse`).
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/chess/help/hint.test.ts` :
 ```ts
@@ -2833,12 +2833,12 @@ describe('alerte de gaffe', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/chess/help`
 Expected : FAIL — modules `hint` et `blunder` introuvables.
 
-- [ ] **Step 3 : Écrire `src/chess/help/hint.ts`**
+- [x] **Step 3 : Écrire `src/chess/help/hint.ts`**
 
 ```ts
 import { opposite } from '../../core/types';
@@ -2879,7 +2879,7 @@ export function hintText(pos: ChessPos, move: ChessMove): string {
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/chess/help/blunder.ts`**
+- [x] **Step 4 : Écrire `src/chess/help/blunder.ts`**
 
 ```ts
 import { opposite, type Color, type Evaluation } from '../../core/types';
@@ -2966,12 +2966,12 @@ export function detectBlunder(pos: ChessPos, move: ChessMove, before: Evaluation
 
 Rappel : `afterForOpponent.scoreCp` est du point de vue de l'adversaire ; la note du joueur après le coup vaut donc `-afterForOpponent.scoreCp`, et la perte `before.scoreCp - (-afterForOpponent.scoreCp)`.
 
-- [ ] **Step 5 : Lancer les tests**
+- [x] **Step 5 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/chess/help`
 Expected : PASS (6 + 7 tests).
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add src/chess/help tests/unit/chess/help
@@ -2993,7 +2993,7 @@ git commit -m "feat: indice et alerte de gaffe pour le niveau Faible"
   - `settings.ts` : `Settings { sound: boolean }`, `DEFAULT_SETTINGS`, `validateSettings(v)`.
   - `progress.ts` : `LessonProgress { completed: readonly string[] }`, `EMPTY_PROGRESS`, `validateProgress(v)`, `markCompleted(p, id)`, `isCompleted(p, id)`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/app/storage.test.ts` :
 ```ts
@@ -3109,12 +3109,12 @@ describe('progression des leçons', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/app/storage.test.ts tests/unit/app/settings-progress.test.ts`
 Expected : FAIL — modules introuvables.
 
-- [ ] **Step 3 : Écrire `src/app/storage.ts`**
+- [x] **Step 3 : Écrire `src/app/storage.ts`**
 
 ```ts
 import { logWarning } from './log';
@@ -3184,7 +3184,7 @@ export function createStorage(backend: KeyValueBackend | null): AppStorage {
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/app/settings.ts`**
+- [x] **Step 4 : Écrire `src/app/settings.ts`**
 
 ```ts
 import { isRecord } from '../core/guards';
@@ -3201,7 +3201,7 @@ export function validateSettings(value: unknown): Settings | null {
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/app/progress.ts`**
+- [x] **Step 5 : Écrire `src/app/progress.ts`**
 
 ```ts
 import { isRecord } from '../core/guards';
@@ -3227,12 +3227,12 @@ export function markCompleted(progress: LessonProgress, lessonId: string): Lesso
 }
 ```
 
-- [ ] **Step 6 : Lancer les tests**
+- [x] **Step 6 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/app/storage.test.ts tests/unit/app/settings-progress.test.ts`
 Expected : PASS (5 + 4 tests).
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/app/storage.ts src/app/settings.ts src/app/progress.ts tests/unit/app/storage.test.ts tests/unit/app/settings-progress.test.ts
@@ -3254,7 +3254,7 @@ git commit -m "feat: stockage local sûr, réglages et progression des leçons"
   - `record.ts` : `MoveCodec<Move>`, `GameRecord { setup; start: string; moves: readonly string[] }`, `toRecord(adapter, codec, s)`, `validateSetup(v)`, `validateRecord(v)`, `restoreSession(adapter, codec, record)`.
   - `saved.ts` : `SavedGameResult = { kind: 'none' } | { kind: 'ok'; session } | { kind: 'error'; message }`, `RESUME_ERROR_MESSAGE`, `loadSavedChessGame(storage)`, `hasSavedChessGame(storage)`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/app/game/session.test.ts` :
 ```ts
@@ -3394,12 +3394,12 @@ describe('sauvegarde des parties', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/app/game`
 Expected : FAIL — modules `session`, `record`, `saved` introuvables.
 
-- [ ] **Step 3 : Écrire `src/app/game/session.ts`**
+- [x] **Step 3 : Écrire `src/app/game/session.ts`**
 
 ```ts
 import { opposite, type Color, type GameAdapter, type GameStatus, type Level } from '../../core/types';
@@ -3476,7 +3476,7 @@ export function undoLastHumanMove<Pos, Move>(adapter: GameAdapter<Pos, Move>, se
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/app/game/record.ts`**
+- [x] **Step 4 : Écrire `src/app/game/record.ts`**
 
 ```ts
 import { isOneOf, isRecord } from '../../core/guards';
@@ -3524,7 +3524,7 @@ export function restoreSession<Pos, Move>(adapter: GameAdapter<Pos, Move>, codec
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/app/game/saved.ts`**
+- [x] **Step 5 : Écrire `src/app/game/saved.ts`**
 
 ```ts
 import { chessAdapter, chessMoveCodec } from '../../chess/adapter';
@@ -3560,12 +3560,12 @@ export function hasSavedChessGame(storage: AppStorage): boolean {
 }
 ```
 
-- [ ] **Step 6 : Lancer les tests**
+- [x] **Step 6 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/app/game`
 Expected : PASS (9 + 5 tests).
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/app/game/session.ts src/app/game/record.ts src/app/game/saved.ts tests/unit/app/game
@@ -3591,7 +3591,7 @@ git commit -m "feat: session de partie immuable, sauvegarde et reprise"
   - `ConfirmDialog` `{ title; message; confirmLabel; cancelLabel; onConfirm; onCancel }`, `EndDialog` `{ result; onReplay; onMenu; onClose; onUndo? }`, `CapturedRow` `{ color; pieces }`.
   - `useChessGame(initial, deps): ChessGame` (voir le code), `PlayScreen` `{ initial; storage; sound; notice?; onExit; onNewGame }`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/chess/explain.test.ts` :
 ```ts
@@ -3699,12 +3699,12 @@ describe('boîtes de dialogue', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/chess/explain.test.ts tests/unit/app/labels.test.ts tests/unit/app/dialogs.test.tsx`
 Expected : FAIL — modules introuvables.
 
-- [ ] **Step 3 : Écrire `src/chess/explain.ts`**
+- [x] **Step 3 : Écrire `src/chess/explain.ts`**
 
 ```ts
 import { opposite, type Color, type DrawReason, type GameStatus, type WinReason } from '../core/types';
@@ -3754,7 +3754,7 @@ export function explainResult(status: GameStatus, viewer: Color | null): ResultT
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/app/labels.ts`**
+- [x] **Step 4 : Écrire `src/app/labels.ts`**
 
 ```ts
 import type { Level } from '../core/types';
@@ -3771,7 +3771,7 @@ export function modeTitle(setup: GameSetup): string {
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/app/sound.ts`**
+- [x] **Step 5 : Écrire `src/app/sound.ts`**
 
 ```ts
 import { logWarning } from './log';
@@ -3807,7 +3807,7 @@ export function playSound(kind: SoundKind, enabled: boolean): void {
 }
 ```
 
-- [ ] **Step 6 : Écrire les composants**
+- [x] **Step 6 : Écrire les composants**
 
 `src/app/components/ConfirmDialog.tsx` :
 ```tsx
@@ -3902,12 +3902,12 @@ export function CapturedRow({ color, pieces }: CapturedRowProps) {
 }
 ```
 
-- [ ] **Step 7 : Lancer les tests unitaires**
+- [x] **Step 7 : Lancer les tests unitaires**
 
 Run : `npx vitest run tests/unit/chess/explain.test.ts tests/unit/app/labels.test.ts tests/unit/app/dialogs.test.tsx`
 Expected : PASS (5 + 2 + 4 tests).
 
-- [ ] **Step 8 : Écrire le hook `src/app/game/useChessGame.ts`**
+- [x] **Step 8 : Écrire le hook `src/app/game/useChessGame.ts`**
 
 Couvert par les tests de bout en bout (Tâche 16), exclu de la couverture unitaire.
 
@@ -4141,7 +4141,7 @@ export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessG
 }
 ```
 
-- [ ] **Step 9 : Écrire `src/app/screens/PlayScreen.tsx`**
+- [x] **Step 9 : Écrire `src/app/screens/PlayScreen.tsx`**
 
 ```tsx
 import { useEffect, useMemo, useState } from 'preact/hooks';
@@ -4298,14 +4298,14 @@ export function PlayScreen(props: PlayScreenProps) {
 }
 ```
 
-- [ ] **Step 10 : Vérifier le typage et les tests**
+- [x] **Step 10 : Vérifier le typage et les tests**
 
 Run : `npx tsc -b`
 Expected : aucune erreur.
 Run : `npx vitest run`
 Expected : PASS (tous les tests).
 
-- [ ] **Step 11 : Commit**
+- [x] **Step 11 : Commit**
 
 ```bash
 git add src/chess/explain.ts src/app/labels.ts src/app/sound.ts src/app/components src/app/game/useChessGame.ts src/app/screens/PlayScreen.tsx tests/unit/chess/explain.test.ts tests/unit/app/labels.test.ts tests/unit/app/dialogs.test.tsx
@@ -4327,7 +4327,7 @@ git commit -m "feat: écran de partie avec IA, aide du niveau Faible et fin de p
   - `lessons/runner.ts` : `RunStatus = 'playing' | 'waiting-opponent' | 'success' | 'failed'`, `Feedback { tone: 'success' | 'error' | 'info'; text }`, `ExerciseRun<Pos>`, `SUCCESS_TEXT`, `starsOf(exercise)`, `startExercise(rules, exercise)`, `playPlayerMove(rules, run, move)`, `playOpponentMove(rules, run, move)`.
   - `chess/lesson-rules.ts` : `chessLessonRules: LessonRules<ChessPos, ChessMove>`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/lessons/runner.test.ts` :
 ```ts
@@ -4429,12 +4429,12 @@ describe('déroulé des exercices', () => {
 
 Explication des positions d'échec : `k7/8/1K6/8/8/8/8/2Q5 w` puis `Qc7` est pat ; `r5k1/…/6K1 b` puis `Ta1` est un mat du couloir donné par l'ordinateur ; `8/8/8/8/8/2k5/8/K1b5 w` : roi blanc contre roi + fou noir, après n'importe quel coup → matériel insuffisant.
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/lessons`
 Expected : FAIL — modules `lessons/runner`, `lessons/types`, `chess/lesson-rules` introuvables.
 
-- [ ] **Step 3 : Écrire `src/lessons/types.ts`**
+- [x] **Step 3 : Écrire `src/lessons/types.ts`**
 
 ```ts
 import type { Color, GameStatus, Level } from '../core/types';
@@ -4482,7 +4482,7 @@ export interface LessonRules<Pos, Move> {
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/lessons/runner.ts`**
+- [x] **Step 4 : Écrire `src/lessons/runner.ts`**
 
 ```ts
 import type { Color, GameStatus } from '../core/types';
@@ -4576,7 +4576,7 @@ export function playOpponentMove<Pos, Move>(rules: LessonRules<Pos, Move>, run: 
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/chess/lesson-rules.ts`**
+- [x] **Step 5 : Écrire `src/chess/lesson-rules.ts`**
 
 ```ts
 import type { LessonRules } from '../lessons/types';
@@ -4596,12 +4596,12 @@ export const chessLessonRules: LessonRules<ChessPos, ChessMove> = {
 };
 ```
 
-- [ ] **Step 6 : Lancer les tests**
+- [x] **Step 6 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/lessons`
 Expected : PASS (8 tests).
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/lessons src/chess/lesson-rules.ts tests/unit/lessons
@@ -4622,7 +4622,7 @@ git commit -m "feat: moteur de leçons générique et règles des leçons d'éch
 
 Toutes les positions ci-dessous ont été vérifiées avec chess.js (coups légaux, mats) ; le test de l'étape 1 le garantit dans la durée.
 
-- [ ] **Step 1 : Écrire le test qui échoue**
+- [x] **Step 1 : Écrire le test qui échoue**
 
 `tests/unit/chess/lessons.test.ts` :
 ```ts
@@ -4709,12 +4709,12 @@ describe('leçons d’échecs', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer le test pour vérifier qu'il échoue**
+- [x] **Step 2 : Lancer le test pour vérifier qu'il échoue**
 
 Run : `npx vitest run tests/unit/chess/lessons.test.ts`
 Expected : FAIL — module `src/chess/lessons` introuvable.
 
-- [ ] **Step 3 : Écrire `src/chess/lessons/pieces.ts` (leçons 1 à 7)**
+- [x] **Step 3 : Écrire `src/chess/lessons/pieces.ts` (leçons 1 à 7)**
 
 ```ts
 import type { Lesson } from '../../lessons/types';
@@ -4827,7 +4827,7 @@ export const PIECE_LESSONS: readonly Lesson[] = [
 ];
 ```
 
-- [ ] **Step 4 : Écrire `src/chess/lessons/rules.ts` (leçons 8 à 14)**
+- [x] **Step 4 : Écrire `src/chess/lessons/rules.ts` (leçons 8 à 14)**
 
 ```ts
 import type { Lesson } from '../../lessons/types';
@@ -4983,7 +4983,7 @@ export const RULE_LESSONS: readonly Lesson[] = [
 ];
 ```
 
-- [ ] **Step 5 : Écrire `src/chess/lessons/strategy.ts` (leçons 15 à 17)**
+- [x] **Step 5 : Écrire `src/chess/lessons/strategy.ts` (leçons 15 à 17)**
 
 ```ts
 import type { Lesson } from '../../lessons/types';
@@ -5085,7 +5085,7 @@ export const STRATEGY_LESSONS: readonly Lesson[] = [
 ];
 ```
 
-- [ ] **Step 6 : Écrire `src/chess/lessons/index.ts`**
+- [x] **Step 6 : Écrire `src/chess/lessons/index.ts`**
 
 ```ts
 import type { Lesson } from '../../lessons/types';
@@ -5100,12 +5100,12 @@ export function findChessLesson(id: string): Lesson | undefined {
 }
 ```
 
-- [ ] **Step 7 : Lancer le test**
+- [x] **Step 7 : Lancer le test**
 
 Run : `npx vitest run tests/unit/chess/lessons.test.ts`
 Expected : PASS (1 + 17 + 32 tests). Si un exercice échoue, corriger la **donnée** de la leçon (position, solutions), jamais le test.
 
-- [ ] **Step 8 : Commit**
+- [x] **Step 8 : Commit**
 
 ```bash
 git add src/chess/lessons tests/unit/chess/lessons.test.ts
@@ -5127,7 +5127,7 @@ git commit -m "feat: 17 leçons d'échecs interactives"
   - `LessonScreen` `{ lesson; nextLesson?: Lesson; sound; onComplete(id); onOpen(id); onBack() }` — étapes : explication → exercices → « Leçon terminée ! ». `onComplete` est appelé quand le dernier exercice est validé par « Terminer la leçon ».
   - `useLessonExercise(exercise, engine)`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/app/lesson-screens.test.tsx` :
 ```tsx
@@ -5199,12 +5199,12 @@ describe('écran de leçon', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/app/lesson-screens.test.tsx`
 Expected : FAIL — modules introuvables.
 
-- [ ] **Step 3 : Écrire `src/app/screens/LessonListScreen.tsx`**
+- [x] **Step 3 : Écrire `src/app/screens/LessonListScreen.tsx`**
 
 ```tsx
 import type { Lesson } from '../../lessons/types';
@@ -5245,7 +5245,7 @@ export function LessonListScreen({ lessons, progress, onOpen, onBack }: LessonLi
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/app/screens/useLessonExercise.ts`**
+- [x] **Step 4 : Écrire `src/app/screens/useLessonExercise.ts`**
 
 ```ts
 import { useEffect, useMemo, useState } from 'preact/hooks';
@@ -5349,7 +5349,7 @@ export function useLessonExercise(exercise: Exercise, engine: () => Engine<Chess
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/app/screens/LessonScreen.tsx`**
+- [x] **Step 5 : Écrire `src/app/screens/LessonScreen.tsx`**
 
 ```tsx
 import { useEffect, useMemo, useState } from 'preact/hooks';
@@ -5507,12 +5507,12 @@ export function LessonScreen({ lesson, nextLesson, sound, onComplete, onOpen, on
 }
 ```
 
-- [ ] **Step 6 : Lancer les tests**
+- [x] **Step 6 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/app/lesson-screens.test.tsx`
 Expected : PASS (3 tests).
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/app/screens/LessonListScreen.tsx src/app/screens/LessonScreen.tsx src/app/screens/useLessonExercise.ts tests/unit/app/lesson-screens.test.tsx
@@ -5537,7 +5537,7 @@ git commit -m "feat: écrans des leçons avec exercices sur le plateau"
   - `menu.ts` : `ColorChoice`, `COLOR_CHOICES`, `resolveColor(choice, rng?)`, `NO_SAVED_GAME_MESSAGE`.
   - Écrans `HomeScreen`, `ChessMenuScreen`, `SettingsScreen`, `NewChessGame`, `ChessResume`, et `App`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 `tests/unit/app/router.test.ts` :
 ```ts
@@ -5660,12 +5660,12 @@ Ajouter à `tests/unit/app/App.test.tsx` (après le test existant) :
   });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/app/router.test.ts tests/unit/app/menus.test.tsx tests/unit/app/App.test.tsx`
 Expected : FAIL — modules `router`, `menu`, écrans introuvables ; les nouveaux tests de `App` échouent.
 
-- [ ] **Step 3 : Écrire `src/app/router.ts`**
+- [x] **Step 3 : Écrire `src/app/router.ts`**
 
 ```ts
 import { isOneOf } from '../core/guards';
@@ -5733,7 +5733,7 @@ export function routeToHash(route: Route): string {
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/app/navigation.ts`**
+- [x] **Step 4 : Écrire `src/app/navigation.ts`**
 
 ```ts
 import { useEffect, useState } from 'preact/hooks';
@@ -5771,7 +5771,7 @@ export function replaceHash(route: Route): void {
 }
 ```
 
-- [ ] **Step 5 : Écrire `src/app/menu.ts`**
+- [x] **Step 5 : Écrire `src/app/menu.ts`**
 
 ```ts
 import type { Color } from '../core/types';
@@ -5792,7 +5792,7 @@ export function resolveColor(choice: ColorChoice, rng: () => number = Math.rando
 }
 ```
 
-- [ ] **Step 6 : Écrire les écrans de menu**
+- [x] **Step 6 : Écrire les écrans de menu**
 
 `src/app/screens/HomeScreen.tsx` :
 ```tsx
@@ -5950,7 +5950,7 @@ export function SettingsScreen({ settings, onChange, onBack }: SettingsScreenPro
 }
 ```
 
-- [ ] **Step 7 : Écrire `src/app/screens/ChessGameRoutes.tsx`**
+- [x] **Step 7 : Écrire `src/app/screens/ChessGameRoutes.tsx`**
 
 ```tsx
 import { useEffect, useState } from 'preact/hooks';
@@ -6001,7 +6001,7 @@ export function ChessResume({ storage, sound, onFailure }: GameRouteProps & { re
 }
 ```
 
-- [ ] **Step 8 : Remplacer `src/app/App.tsx`**
+- [x] **Step 8 : Remplacer `src/app/App.tsx`**
 
 ```tsx
 import { useMemo, useState } from 'preact/hooks';
@@ -6102,19 +6102,19 @@ export function App() {
 }
 ```
 
-- [ ] **Step 9 : Lancer les tests et vérifier le typage**
+- [x] **Step 9 : Lancer les tests et vérifier le typage**
 
 Run : `npx vitest run`
 Expected : PASS (tous les tests, dont 11 de routes, 4 de menus et 4 d'`App`).
 Run : `npx tsc -b`
 Expected : aucune erreur.
 
-- [ ] **Step 10 : Vérifier à la main dans le navigateur**
+- [x] **Step 10 : Vérifier à la main dans le navigateur**
 
 Run : `npm run dev` puis ouvrir l'adresse affichée en format téléphone.
 Expected : Accueil → Échecs → Apprendre à jouer → leçon 1 réussie ; « Contre l'ordinateur » en Faible : l'ordinateur répond, « Indice » affiche une flèche, « Annuler » revient en arrière ; recharger la page reprend la partie.
 
-- [ ] **Step 11 : Commit**
+- [x] **Step 11 : Commit**
 
 ```bash
 git add src/app tests/unit/app
@@ -6133,7 +6133,7 @@ git commit -m "feat: navigation, menus, réglages et assemblage de l'application
 - Consumes: `src/chess/pieces/wN.svg` (Tâche 3) ; `vite-plugin-pwa`, `@vite-pwa/assets-generator` (installés à la Tâche 1).
 - Produces : `dist/manifest.webmanifest`, `dist/sw.js` (précache de toute l'app **y compris** `stockfish/stockfish-19-lite-single.wasm`).
 
-- [ ] **Step 1 : Écrire `scripts/make-icon.mjs`**
+- [x] **Step 1 : Écrire `scripts/make-icon.mjs`**
 
 ```js
 // Fabrique public/icon.svg : un cavalier blanc et un pion de dames sur fond vert.
@@ -6156,7 +6156,7 @@ writeFileSync(join(root, 'public', 'icon.svg'), icon);
 console.info('[make-icon] public/icon.svg écrit');
 ```
 
-- [ ] **Step 2 : Écrire `pwa-assets.config.ts`**
+- [x] **Step 2 : Écrire `pwa-assets.config.ts`**
 
 ```ts
 import { defineConfig, minimal2023Preset } from '@vite-pwa/assets-generator/config';
@@ -6167,12 +6167,12 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 3 : Générer les icônes**
+- [x] **Step 3 : Générer les icônes**
 
 Run : `npm run icons`
 Expected : `[make-icon] public/icon.svg écrit`, puis création dans `public/` de `pwa-64x64.png`, `pwa-192x192.png`, `pwa-512x512.png`, `maskable-icon-512x512.png`, `apple-touch-icon-180x180.png`, `favicon.ico`. Ouvrir `public/pwa-192x192.png` pour vérifier que le cavalier est centré et lisible ; sinon ajuster `translate`/`scale` dans `make-icon.mjs` et relancer.
 
-- [ ] **Step 4 : Configurer le plugin PWA dans `vite.config.ts`**
+- [x] **Step 4 : Configurer le plugin PWA dans `vite.config.ts`**
 
 Remplacer le fichier par :
 ```ts
@@ -6233,7 +6233,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 5 : Compléter `index.html`**
+- [x] **Step 5 : Compléter `index.html`**
 
 Dans `<head>`, après la ligne `<meta name="description" …>`, ajouter :
 ```html
@@ -6245,7 +6245,7 @@ Dans `<head>`, après la ligne `<meta name="description" …>`, ajouter :
     <meta name="apple-mobile-web-app-title" content="Échecs & Dames" />
 ```
 
-- [ ] **Step 6 : Construire et vérifier le précache**
+- [x] **Step 6 : Construire et vérifier le précache**
 
 Run : `npm run build`
 Expected : build réussi, message du plugin PWA indiquant un nombre d'entrées précachées.
@@ -6257,12 +6257,12 @@ stockfish-19-lite-single.js
 stockfish-19-lite-single.wasm
 ```
 
-- [ ] **Step 7 : Lancer tous les tests**
+- [x] **Step 7 : Lancer tous les tests**
 
 Run : `npx vitest run`
 Expected : PASS.
 
-- [ ] **Step 8 : Commit**
+- [x] **Step 8 : Commit**
 
 ```bash
 git add scripts/make-icon.mjs pwa-assets.config.ts public/icon.svg public/*.png public/favicon.ico vite.config.ts index.html
@@ -6280,12 +6280,12 @@ git commit -m "feat: application installable et jouable hors ligne (PWA)"
 - Consumes: l'app construite (`npm run build` + `npm run preview`) ; sélecteurs `rect[data-square]`, `[data-piece]` (Tâche 3) ; textes des écrans (Tâches 10, 13, 14) ; clé `jeux.echecs.partie` (Tâche 8).
 - Produces : `npm run e2e` vert.
 
-- [ ] **Step 1 : Installer Chromium pour Playwright**
+- [x] **Step 1 : Installer Chromium pour Playwright**
 
 Run : `npx playwright install chromium`
 Expected : téléchargement de Chromium terminé.
 
-- [ ] **Step 2 : Écrire `playwright.config.ts`**
+- [x] **Step 2 : Écrire `playwright.config.ts`**
 
 ```ts
 import { defineConfig, devices } from '@playwright/test';
@@ -6308,7 +6308,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 3 : Écrire `tests/e2e/helpers.ts`**
+- [x] **Step 3 : Écrire `tests/e2e/helpers.ts`**
 
 ```ts
 import type { Page } from '@playwright/test';
@@ -6328,7 +6328,7 @@ export async function openChess(page: Page): Promise<void> {
 }
 ```
 
-- [ ] **Step 4 : Écrire les scénarios**
+- [x] **Step 4 : Écrire les scénarios**
 
 `tests/e2e/lessons.spec.ts` :
 ```ts
@@ -6446,12 +6446,12 @@ test('fonctionne hors ligne après le premier chargement, ordinateur compris', a
 });
 ```
 
-- [ ] **Step 5 : Lancer les tests de bout en bout**
+- [x] **Step 5 : Lancer les tests de bout en bout**
 
 Run : `npm run e2e`
 Expected : 7 tests PASS. En cas d'échec, lire la trace (`npx playwright show-trace test-results/<dossier>/trace.zip`) et corriger le **code** de l'app (les textes attendus viennent de la spec).
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add playwright.config.ts tests/e2e
@@ -6471,7 +6471,7 @@ git commit -m "test: scénarios de bout en bout sur téléphone (leçon, 2 joueu
 
 Les matchs utilisent des temps de réflexion réduits (Expert 300 ms, Moyen 100 ms) pour rester raisonnables ; les options UCI de chaque niveau restent celles de `LEVELS`.
 
-- [ ] **Step 1 : Écrire `vitest.strength.config.ts`**
+- [x] **Step 1 : Écrire `vitest.strength.config.ts`**
 
 ```ts
 import { defineConfig } from 'vitest/config';
@@ -6486,7 +6486,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 2 : Écrire `tests/strength/node-transport.ts`**
+- [x] **Step 2 : Écrire `tests/strength/node-transport.ts`**
 
 ```ts
 import { createRequire } from 'node:module';
@@ -6533,7 +6533,7 @@ export function createNodeTransport(): UciTransport {
 }
 ```
 
-- [ ] **Step 3 : Écrire `tests/strength/strength.test.ts`**
+- [x] **Step 3 : Écrire `tests/strength/strength.test.ts`**
 
 ```ts
 import { afterAll, describe, expect, it } from 'vitest';
@@ -6607,12 +6607,12 @@ describe('force de l’IA', () => {
 });
 ```
 
-- [ ] **Step 4 : Lancer les tests de force**
+- [x] **Step 4 : Lancer les tests de force**
 
 Run : `npm run test:strength`
 Expected : 5 tests PASS (plusieurs minutes). Si un match échoue de peu, relancer une fois (hasard des niveaux Faible et Moyen) ; s'il échoue encore, revoir les réglages de `LEVELS` avec la spec §5.1, sans toucher aux seuils du test.
 
-- [ ] **Step 5 : Vérification finale de l'étape 1**
+- [x] **Step 5 : Vérification finale de l'étape 1**
 
 Run : `npm run test:coverage`
 Expected : PASS, couverture ≥ 80 % sur les quatre indicateurs.
@@ -6621,7 +6621,7 @@ Expected : build réussi.
 Run : `npm run e2e`
 Expected : 7 tests PASS.
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add vitest.strength.config.ts tests/strength
