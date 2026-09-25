@@ -94,7 +94,7 @@ export function LessonScreen({ lesson, nextLesson, sound, onComplete, onOpen, on
 
   const header = (
     <header class="topbar">
-      <button type="button" class="back" aria-label="Retour aux leçons" onClick={onBack}>
+      <button type="button" class="back" aria-label="Retour à la liste des leçons" onClick={onBack}>
         ←
       </button>
       <h1>{lesson.title}</h1>
