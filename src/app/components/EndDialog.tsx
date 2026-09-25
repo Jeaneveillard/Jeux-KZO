@@ -1,0 +1,36 @@
+import type { ResultText } from '../../chess/explain';
+
+interface EndDialogProps {
+  readonly result: ResultText;
+  readonly onReplay: () => void;
+  readonly onMenu: () => void;
+  readonly onClose: () => void;
+  readonly onUndo?: () => void;
+}
+
+export function EndDialog({ result, onReplay, onMenu, onClose, onUndo }: EndDialogProps) {
+  return (
+    <div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="end-title">
+      <div class="modal">
+        <h2 id="end-title">{result.title}</h2>
+        {result.detail && <p>{result.detail}</p>}
+        <button type="button" class="btn btn-primary" onClick={onReplay}>
+          Rejouer
+        </button>
+        {onUndo && (
+          <button type="button" class="btn btn-small" onClick={onUndo}>
+            Annuler mon dernier coup
+          </button>
+        )}
+        <div class="actions">
+          <button type="button" class="btn btn-small" onClick={onClose}>
+            Voir le plateau
+          </button>
+          <button type="button" class="btn btn-small" onClick={onMenu}>
+            Menu
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
