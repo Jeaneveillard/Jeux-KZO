@@ -16,13 +16,29 @@ export function chessBoardPieces(pos: ChessPos): BoardPiece[] {
   }));
 }
 
-/** Pièces perdues par chaque camp par rapport à la position de départ, de la plus forte à la plus faible. */
+const PROMOTABLE: readonly PieceType[] = ['q', 'r', 'b', 'n'];
+
+/** Pièces perdues par chaque camp par rapport à la position de départ, de la plus forte à la plus faible.
+ * Un pion promu n'est pas compté comme capturé : les pièces excédentaires de son type de promotion
+ * (par rapport au nombre de départ) sont considérées comme la trace de sa promotion, pas d'une prise. */
 export function capturedPieces(pos: ChessPos): Readonly<Record<Color, readonly PieceType[]>> {
   const pieces = listPieces(pos);
-  const lost = (color: Color): PieceType[] =>
-    STRONGEST_FIRST.flatMap((type) => {
-      const onBoard = pieces.filter((piece) => piece.color === color && piece.type === type).length;
-      return Array.from({ length: Math.max(0, START_COUNT[type] - onBoard) }, () => type);
+  const countOnBoard = (color: Color, type: PieceType): number =>
+    pieces.filter((piece) => piece.color === color && piece.type === type).length;
+
+  const lost = (color: Color): PieceType[] => {
+    const promotions = PROMOTABLE.reduce(
+      (total, type) => total + Math.max(0, countOnBoard(color, type) - START_COUNT[type]),
+      0,
+    );
+    return STRONGEST_FIRST.flatMap((type) => {
+      const onBoard = countOnBoard(color, type);
+      const missing =
+        type === 'p'
+          ? Math.max(0, START_COUNT.p - onBoard - promotions)
+          : Math.max(0, START_COUNT[type] - onBoard);
+      return Array.from({ length: missing }, () => type);
     });
+  };
   return { white: lost('white'), black: lost('black') };
 }

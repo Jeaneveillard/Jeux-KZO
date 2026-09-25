@@ -12,7 +12,7 @@ describe('PromotionPicker', () => {
     expect(labels).toEqual(['Dame blanche', 'Tour blanche', 'Fou blanc', 'Cavalier blanc', 'Annuler']);
   });
 
-  it('renvoie le coup choisi ou lannulation', () => {
+  it('renvoie le coup choisi ou l’annulation', () => {
     const onPick = vi.fn();
     const onCancel = vi.fn();
     render(<PromotionPicker color="white" choices={choices} onPick={onPick} onCancel={onCancel} />);
