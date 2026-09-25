@@ -104,7 +104,7 @@ export function PlayScreen(props: PlayScreenProps) {
           </button>
         )}
         {!finished && (
-          <button type="button" class="btn btn-small btn-danger" onClick={() => setConfirmResign(true)}>
+          <button type="button" class="btn btn-small btn-danger" onClick={() => setConfirmResign(true)} disabled={game.checking}>
             Abandonner
           </button>
         )}

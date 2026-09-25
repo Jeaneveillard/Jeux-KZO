@@ -216,6 +216,8 @@ export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessG
       setInput(EMPTY_INPUT);
     },
     resignGame: () => {
+      // Un coup en cours de vérification serait ensuite joué sur la session d'avant l'abandon et l'effacerait.
+      if (checking) return;
       const loser = session.setup.mode === 'ai' ? session.setup.playerColor : turnOf(position);
       setSession(resign(session, loser));
     },
