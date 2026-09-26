@@ -26,4 +26,19 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: '2 joueurs' })).toBeTruthy();
     expect(screen.getByRole('status').textContent).toBe('Au tour des Blancs');
   });
+
+  it('affiche le menu des dames', () => {
+    window.location.hash = '#/dames';
+    render(<App />);
+    expect(screen.getByRole('heading', { name: 'Dames' })).toBeTruthy();
+    expect(screen.getByText('0 / 12 leçons terminées')).toBeTruthy();
+  });
+
+  it('démarre une partie de dames à deux joueurs', () => {
+    window.location.hash = '#/dames/partie/deux-joueurs';
+    const { container } = render(<App />);
+    expect(screen.getByRole('status').textContent).toBe('Au tour des Blancs');
+    expect(container.querySelectorAll('[data-piece]')).toHaveLength(40);
+    expect(container.querySelectorAll('.sq-num')).toHaveLength(50);
+  });
 });

@@ -22,8 +22,8 @@ export function SettingsScreen({ settings, onChange, onBack }: SettingsScreenPro
       <div class="card">
         <h2>À propos</h2>
         <p class="muted">
-          Moteur d'échecs : Stockfish (licence GPL-3.0). Pièces : « cburnett » (licence GPLv2+). Cette application est un logiciel
-          libre sous licence GPL-3.0.
+          Moteur d'échecs : Stockfish (licence GPL-3.0). Pièces d'échecs : « cburnett » (licence GPLv2+). Moteur de dames : écrit
+          pour cette application. Cette application est un logiciel libre sous licence GPL-3.0.
         </p>
       </div>
     </section>

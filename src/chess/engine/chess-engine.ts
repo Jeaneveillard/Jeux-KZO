@@ -1,7 +1,7 @@
 import type { Engine, Evaluation, Level } from '../../core/types';
 import { fromUci } from '../adapter';
 import type { ChessMove, ChessPos } from '../types';
-import { EngineAbortError, EngineTimeoutError, EngineUnavailableError } from './errors';
+import { EngineAbortError, EngineTimeoutError, EngineUnavailableError } from '../../core/engine-errors';
 import { movesKeepingQueen, pickFaibleMove } from './faible';
 import { ANALYSIS_OPTIONS, ANALYSIS_TIMEOUT_MS, LEVELS, type LevelConfig } from './levels';
 import type { SearchRequest, SearchResult, StockfishClient } from './stockfish-client';

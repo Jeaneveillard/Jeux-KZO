@@ -1,10 +1,12 @@
 import { useState } from 'preact/hooks';
-import { LEVELS_ORDER, type Level } from '../../core/types';
+import { LEVELS_ORDER, type GameId, type Level } from '../../core/types';
 import { LEVEL_LABELS } from '../labels';
 import { COLOR_CHOICES, resolveColor, type ColorChoice } from '../menu';
 import type { Route } from '../router';
 
-interface ChessMenuScreenProps {
+interface GameMenuScreenProps {
+  readonly game: GameId;
+  readonly title: string;
   readonly onNavigate: (route: Route) => void;
   readonly hasSavedGame: boolean;
   readonly completedCount: number;
@@ -12,7 +14,7 @@ interface ChessMenuScreenProps {
   readonly notice: string | null;
 }
 
-export function ChessMenuScreen({ onNavigate, hasSavedGame, completedCount, totalLessons, notice }: ChessMenuScreenProps) {
+export function GameMenuScreen({ game, title, onNavigate, hasSavedGame, completedCount, totalLessons, notice }: GameMenuScreenProps) {
   const [level, setLevel] = useState<Level>('faible');
   const [color, setColor] = useState<ColorChoice>('white');
 
@@ -22,7 +24,7 @@ export function ChessMenuScreen({ onNavigate, hasSavedGame, completedCount, tota
         <button type="button" class="back" aria-label="Retour à l'accueil" onClick={() => onNavigate({ name: 'home' })}>
           ←
         </button>
-        <h1>Échecs</h1>
+        <h1>{title}</h1>
       </header>
       {notice && (
         <p class="feedback feedback-info" role="status">
@@ -30,11 +32,11 @@ export function ChessMenuScreen({ onNavigate, hasSavedGame, completedCount, tota
         </p>
       )}
       {hasSavedGame && (
-        <button type="button" class="btn btn-primary" onClick={() => onNavigate({ name: 'chess-resume' })}>
+        <button type="button" class="btn btn-primary" onClick={() => onNavigate({ name: 'resume', game })}>
           Reprendre la partie
         </button>
       )}
-      <button type="button" class="btn" onClick={() => onNavigate({ name: 'chess-lessons' })}>
+      <button type="button" class="btn" onClick={() => onNavigate({ name: 'lessons', game })}>
         Apprendre à jouer
         <span class="sub">
           {completedCount} / {totalLessons} leçons terminées
@@ -60,7 +62,7 @@ export function ChessMenuScreen({ onNavigate, hasSavedGame, completedCount, tota
         <button
           type="button"
           class="btn btn-primary"
-          onClick={() => onNavigate({ name: 'chess-play', setup: { game: 'chess', mode: 'ai', level, playerColor: resolveColor(color) } })}
+          onClick={() => onNavigate({ name: 'play', setup: { game, mode: 'ai', level, playerColor: resolveColor(color) } })}
         >
           Jouer
         </button>
@@ -68,7 +70,7 @@ export function ChessMenuScreen({ onNavigate, hasSavedGame, completedCount, tota
       <button
         type="button"
         class="btn"
-        onClick={() => onNavigate({ name: 'chess-play', setup: { game: 'chess', mode: 'local', level: null, playerColor: 'white' } })}
+        onClick={() => onNavigate({ name: 'play', setup: { game, mode: 'local', level: null, playerColor: 'white' } })}
       >
         2 joueurs sur ce téléphone
         <span class="sub">Chacun son tour, sur le même écran</span>

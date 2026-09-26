@@ -1,19 +1,17 @@
 import type { Color } from '../../core/types';
-import { pieceLabel } from '../../chess/names';
-import { pieceImage } from '../../chess/pieces';
-import type { PieceType } from '../../chess/types';
+import type { PieceIcon } from '../games/kit';
 
 interface CapturedRowProps {
   /** Couleur des pièces perdues. */
   readonly color: Color;
-  readonly pieces: readonly PieceType[];
+  readonly pieces: readonly PieceIcon[];
 }
 
 export function CapturedRow({ color, pieces }: CapturedRowProps) {
   return (
     <div class="captured" aria-label={color === 'white' ? 'Pièces blanches prises' : 'Pièces noires prises'}>
-      {pieces.map((type, index) => (
-        <img key={`${type}-${index}`} src={pieceImage(color, type)} alt={pieceLabel(color, type)} />
+      {pieces.map((piece, index) => (
+        <img key={`${piece.label}-${index}`} src={piece.image} alt={piece.label} />
       ))}
     </div>
   );

@@ -1,4 +1,4 @@
-import { EngineAbortError, EngineLoadError, EngineTimeoutError } from './errors';
+import { EngineAbortError, EngineLoadError, EngineTimeoutError } from '../../core/engine-errors';
 import type { UciTransport } from './transport';
 import { parseBestMove, parseInfo, type UciInfo } from './uci';
 

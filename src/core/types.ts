@@ -2,8 +2,21 @@ export type Color = 'white' | 'black';
 export type Level = 'faible' | 'moyen' | 'expert';
 export const LEVELS_ORDER: readonly Level[] = ['faible', 'moyen', 'expert'];
 
+export type GameId = 'chess' | 'draughts';
+export const GAME_IDS: readonly GameId[] = ['chess', 'draughts'];
+
 export type WinReason = 'checkmate' | 'resign' | 'no-moves';
-export type DrawReason = 'stalemate' | 'repetition' | 'fifty-moves' | 'insufficient-material';
+/**
+ * `king-moves` : 25 coups de suite joués seulement par des dames, sans prise ni pion (dames) ;
+ * `endgame-limit` : fin de partie limitée à 16 ou 5 coups (dames).
+ */
+export type DrawReason =
+  | 'stalemate'
+  | 'repetition'
+  | 'fifty-moves'
+  | 'insufficient-material'
+  | 'king-moves'
+  | 'endgame-limit';
 
 export type GameStatus =
   | { readonly kind: 'ongoing' }
@@ -14,7 +27,7 @@ export const ONGOING: GameStatus = { kind: 'ongoing' };
 
 /** Règles d'un jeu. Les positions sont immuables : `play` renvoie toujours un nouvel objet. */
 export interface GameAdapter<Pos, Move> {
-  readonly id: 'chess' | 'draughts';
+  readonly id: GameId;
   initial(): Pos;
   parse(text: string): Pos;
   serialize(pos: Pos): string;
@@ -26,7 +39,7 @@ export interface GameAdapter<Pos, Move> {
 
 /**
  * Évaluation du point de vue du camp au trait.
- * `mateIn` > 0 : le camp au trait mate en n coups ; < 0 : il est maté en n coups.
+ * `mateIn` > 0 : le camp au trait gagne de force en n coups ; < 0 : il perd de force en n coups.
  */
 export interface Evaluation {
   readonly scoreCp: number;

@@ -5,12 +5,13 @@ import { parseRoute, routeToHash, type Route } from '../../../src/app/router';
 const routes: Route[] = [
   { name: 'home' },
   { name: 'settings' },
-  { name: 'chess-menu' },
-  { name: 'chess-lessons' },
-  { name: 'chess-lesson', lessonId: 'en-passant' },
-  { name: 'chess-resume' },
-  { name: 'chess-play', setup: { game: 'chess', mode: 'ai', level: 'expert', playerColor: 'black' } },
-  { name: 'chess-play', setup: { game: 'chess', mode: 'local', level: null, playerColor: 'white' } },
+  { name: 'menu', game: 'chess' },
+  { name: 'menu', game: 'draughts' },
+  { name: 'lessons', game: 'chess' },
+  { name: 'lesson', game: 'draughts', lessonId: 'rafles' },
+  { name: 'resume', game: 'chess' },
+  { name: 'play', setup: { game: 'chess', mode: 'ai', level: 'expert', playerColor: 'black' } },
+  { name: 'play', setup: { game: 'draughts', mode: 'local', level: null, playerColor: 'white' } },
 ];
 
 describe('routes', () => {
@@ -19,14 +20,16 @@ describe('routes', () => {
   });
 
   it('écrit des adresses lisibles', () => {
-    expect(routeToHash({ name: 'chess-play', setup: { game: 'chess', mode: 'ai', level: 'faible', playerColor: 'white' } })).toBe('#/echecs/partie/ordi/faible/blancs');
+    expect(routeToHash({ name: 'play', setup: { game: 'chess', mode: 'ai', level: 'faible', playerColor: 'white' } })).toBe('#/echecs/partie/ordi/faible/blancs');
+    expect(routeToHash({ name: 'lessons', game: 'draughts' })).toBe('#/dames/lecons');
     expect(routeToHash({ name: 'home' })).toBe('#/');
   });
 
   it('se rabat sur un écran sûr pour une adresse inconnue', () => {
     expect(parseRoute('')).toEqual({ name: 'home' });
     expect(parseRoute('#/nimporte')).toEqual({ name: 'home' });
-    expect(parseRoute('#/echecs/partie/ordi/maitre/blancs')).toEqual({ name: 'chess-menu' });
+    expect(parseRoute('#/constructor')).toEqual({ name: 'home' });
+    expect(parseRoute('#/echecs/partie/ordi/maitre/blancs')).toEqual({ name: 'menu', game: 'chess' });
     expect(parseRoute('#/echecs/%E0%A4%A')).toEqual({ name: 'home' });
   });
 });

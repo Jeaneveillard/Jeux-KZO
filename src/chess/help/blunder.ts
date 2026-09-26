@@ -1,11 +1,10 @@
 import { opposite, type Color, type Evaluation } from '../../core/types';
+import { NO_BLUNDER, type BlunderVerdict } from '../../core/help';
 import { attackersOf, listPieces, pieceOn, play, turnOf } from '../adapter';
 import { PIECE_VALUES, isFeminine, withArticle, withPossessive } from '../names';
 import type { ChessMove, ChessPos, PieceType } from '../types';
 
 export const BLUNDER_THRESHOLD_CP = 200;
-
-export type BlunderVerdict = { readonly blunder: false } | { readonly blunder: true; readonly message: string };
 
 interface Attacker {
   readonly square: string;
@@ -18,8 +17,6 @@ interface Hanging {
   readonly attacker: Attacker;
   readonly defended: boolean;
 }
-
-const NO_BLUNDER: BlunderVerdict = { blunder: false };
 
 function attackers(pos: ChessPos, square: string, by: Color): Attacker[] {
   return attackersOf(pos, square, by).flatMap((from) => {

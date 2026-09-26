@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   EngineAbortError, EngineLoadError, EngineTimeoutError, engineErrorMessage, isAbortError,
-} from '../../../../src/chess/engine/errors';
+} from '../../../../src/core/engine-errors';
 import { StockfishClient, type SearchRequest } from '../../../../src/chess/engine/stockfish-client';
 import { FakeTransport, standardResponder } from './fake-transport';
 

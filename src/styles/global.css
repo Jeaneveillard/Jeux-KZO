@@ -84,6 +84,7 @@ p { margin: 6px 0; }
 .coord { font-size: 18px; font-weight: 700; }
 .coord-on-light { fill: #b58863; }
 .coord-on-dark { fill: #f0d9b5; }
+.sq-num { font-size: 22px; font-weight: 700; fill: rgb(255 255 255 / 0.6); }
 .piece-move { animation: piece-slide 180ms ease-out; }
 @keyframes piece-slide { from { transform: translate(var(--dx), var(--dy)); } }
 

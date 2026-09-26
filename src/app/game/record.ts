@@ -1,10 +1,11 @@
 import { isOneOf, isRecord } from '../../core/guards';
-import { LEVELS_ORDER, type GameAdapter } from '../../core/types';
-import { applyMove, createSession, type GameSetup, type Session } from './session';
+import { GAME_IDS, LEVELS_ORDER, type GameAdapter } from '../../core/types';
+import { applyMove, createSession, currentPosition, type GameSetup, type Session } from './session';
 
-export interface MoveCodec<Move> {
+export interface MoveCodec<Pos, Move> {
   encode(move: Move): string;
-  decode(text: string): Move;
+  /** `pos` : position où le coup est joué (les dames en ont besoin pour retrouver les pièces prises). */
+  decode(text: string, pos: Pos): Move;
 }
 
 export interface GameRecord {
@@ -13,14 +14,14 @@ export interface GameRecord {
   readonly moves: readonly string[];
 }
 
-export function toRecord<Pos, Move>(adapter: GameAdapter<Pos, Move>, codec: MoveCodec<Move>, session: Session<Pos, Move>): GameRecord {
+export function toRecord<Pos, Move>(adapter: GameAdapter<Pos, Move>, codec: MoveCodec<Pos, Move>, session: Session<Pos, Move>): GameRecord {
   return { setup: session.setup, start: adapter.serialize(session.positions[0]), moves: session.moves.map((m) => codec.encode(m)) };
 }
 
 export function validateSetup(value: unknown): GameSetup | null {
   if (!isRecord(value)) return null;
   const { game, mode, level, playerColor } = value;
-  if (game !== 'chess' || !isOneOf(mode, ['ai', 'local'] as const) || !isOneOf(playerColor, ['white', 'black'] as const)) return null;
+  if (!isOneOf(game, GAME_IDS) || !isOneOf(mode, ['ai', 'local'] as const) || !isOneOf(playerColor, ['white', 'black'] as const)) return null;
   const validLevel = level === null ? null : isOneOf(level, LEVELS_ORDER) ? level : undefined;
   if (validLevel === undefined) return null;
   return { game, mode, level: validLevel, playerColor };
@@ -35,9 +36,9 @@ export function validateRecord(value: unknown): GameRecord | null {
 }
 
 /** Rejoue la partie coup par coup ; lève une erreur si un coup est illégal. */
-export function restoreSession<Pos, Move>(adapter: GameAdapter<Pos, Move>, codec: MoveCodec<Move>, record: GameRecord): Session<Pos, Move> {
+export function restoreSession<Pos, Move>(adapter: GameAdapter<Pos, Move>, codec: MoveCodec<Pos, Move>, record: GameRecord): Session<Pos, Move> {
   return record.moves.reduce(
-    (session, text) => applyMove(adapter, session, codec.decode(text)),
+    (session, text) => applyMove(adapter, session, codec.decode(text, currentPosition(session))),
     createSession(adapter, record.setup, adapter.parse(record.start)),
   );
 }
