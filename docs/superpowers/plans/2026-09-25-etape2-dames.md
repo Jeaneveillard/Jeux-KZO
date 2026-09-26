@@ -95,7 +95,7 @@ Un bloc précédé de **`Fichier : chemin`** donne le contenu **complet** du fic
   - `app/game/saved.ts` : `SavedGameSpec<Pos, Move> { id; adapter; codec; savedGameKey }`, `SavedGameResult<Pos, Move>`, `loadSavedGame(spec, storage)`, `hasSavedGame(spec, storage)` ; provisoirement `loadSavedChessGame` / `hasSavedChessGame` (supprimés à la tâche 2).
   - `app/storage.ts` : `STORAGE_KEYS.draughtsProgress = 'jeux.dames.progression'`, `STORAGE_KEYS.draughtsSavedGame = 'jeux.dames.partie'`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/core/explain.test.ts`**
 ```ts
@@ -214,12 +214,12 @@ describe('sauvegarde des parties', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/core/explain.test.ts tests/unit/app/game/record.test.ts`
 Expected : FAIL — `src/core/explain` introuvable, `loadSavedGame` / `hasSavedGame` non exportés.
 
-- [ ] **Step 3 : Déplacer les erreurs du moteur dans `core`**
+- [x] **Step 3 : Déplacer les erreurs du moteur dans `core`**
 
 ```bash
 git mv src/chess/engine/errors.ts src/core/engine-errors.ts
@@ -230,7 +230,7 @@ grep -rn "engine/errors'" src tests
 ```
 Expected : la dernière commande n'affiche rien.
 
-- [ ] **Step 4 : Écrire les types et modules communs**
+- [x] **Step 4 : Écrire les types et modules communs**
 
 **Fichier : `src/core/types.ts`**
 ```ts
@@ -345,7 +345,7 @@ export type BlunderVerdict = { readonly blunder: false } | { readonly blunder: t
 export const NO_BLUNDER: BlunderVerdict = { blunder: false };
 ```
 
-- [ ] **Step 5 : Brancher les échecs sur les modules communs**
+- [x] **Step 5 : Brancher les échecs sur les modules communs**
 
 **Fichier : `src/chess/explain.ts`**
 ```ts
@@ -414,7 +414,7 @@ import type { BlunderVerdict } from '../../core/help';
 
 Dans `src/app/components/EndDialog.tsx`, remplacer `import type { ResultText } from '../../chess/explain';` par `import type { ResultText } from '../../core/explain';`.
 
-- [ ] **Step 6 : Rendre la sauvegarde générique**
+- [x] **Step 6 : Rendre la sauvegarde générique**
 
 Dans `src/app/storage.ts`, compléter `STORAGE_KEYS` :
 ```ts
@@ -536,12 +536,12 @@ export const loadSavedChessGame = (storage: AppStorage) => loadSavedGame(CHESS_S
 export const hasSavedChessGame = (storage: AppStorage) => hasSavedGame(CHESS_SAVED_GAME, storage);
 ```
 
-- [ ] **Step 7 : Lancer tous les tests et le typage**
+- [x] **Step 7 : Lancer tous les tests et le typage**
 
 Run : `npx vitest run` puis `npx tsc -b`
 Expected : PASS (tous les tests, dont 4 + 8 de cette tâche), aucune erreur de typage.
 
-- [ ] **Step 8 : Commit**
+- [x] **Step 8 : Commit**
 
 ```bash
 git add -A src tests
@@ -568,7 +568,7 @@ git commit -m "refactor: socle commun (types, erreurs, textes de fin, sauvegarde
   - `router.ts` : `Route = home | settings | { menu, game } | { lessons, game } | { lesson, game, lessonId } | { play, setup } | { resume, game }` ; adresses `#/echecs/…` et `#/dames/…`.
   - Écrans : `PlayScreen({ kit, initial, storage, sound, notice?, onExit, onNewGame })`, `NewGame({ kit, setup, storage, sound })`, `ResumeGame({ kit, storage, sound, onFailure })`, `GameMenuScreen({ game, title, onNavigate, hasSavedGame, completedCount, totalLessons, notice })`, `LessonScreen({ kit, lesson, nextLesson?, sound, onComplete, onOpen, onBack })`, `useLessonExercise(rules, exercise, engine)`, `CapturedRow({ color, pieces: PieceIcon[] })`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 ```bash
 git mv tests/unit/app/game/useChessGame.test.ts tests/unit/app/game/useGame.test.ts
@@ -840,12 +840,12 @@ describe('écran de leçon', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/app`
 Expected : FAIL — `games`, `useGame`, `GameMenuScreen` introuvables ; routes et props différentes.
 
-- [ ] **Step 3 : Écrire le kit de jeu et le kit des échecs**
+- [x] **Step 3 : Écrire le kit de jeu et le kit des échecs**
 
 **Fichier : `src/app/games/kit.ts`**
 ```ts
@@ -1013,7 +1013,7 @@ export function hasSavedGame<Pos, Move>(spec: SavedGameSpec<Pos, Move>, storage:
 }
 ```
 
-- [ ] **Step 4 : Écrire le hook générique `useGame` (remplace `useChessGame`)**
+- [x] **Step 4 : Écrire le hook générique `useGame` (remplace `useChessGame`)**
 
 ```bash
 git rm -q src/app/game/useChessGame.ts
@@ -1251,7 +1251,7 @@ export function useGame<Pos, Move extends MoveShape>(
 }
 ```
 
-- [ ] **Step 5 : Écrire les écrans de partie génériques**
+- [x] **Step 5 : Écrire les écrans de partie génériques**
 
 **Fichier : `src/app/components/CapturedRow.tsx`**
 ```tsx
@@ -1492,7 +1492,7 @@ export function ResumeGame<Pos, Move extends MoveShape>({
 }
 ```
 
-- [ ] **Step 6 : Écrire les leçons génériques**
+- [x] **Step 6 : Écrire les leçons génériques**
 
 **Fichier : `src/app/screens/useLessonExercise.ts`**
 ```ts
@@ -1758,7 +1758,7 @@ export function LessonScreen<Pos, Move extends MoveShape>({ kit, lesson, nextLes
 }
 ```
 
-- [ ] **Step 7 : Écrire les adresses, les menus et l'assemblage**
+- [x] **Step 7 : Écrire les adresses, les menus et l'assemblage**
 
 **Fichier : `src/app/router.ts`**
 ```ts
@@ -2040,17 +2040,17 @@ export function App() {
 
 Dans `vite.config.ts`, dans la liste `coverage.exclude`, remplacer `'src/app/game/useChessGame.ts',` par `'src/app/game/useGame.ts',`.
 
-- [ ] **Step 8 : Lancer tous les tests et le typage**
+- [x] **Step 8 : Lancer tous les tests et le typage**
 
 Run : `npx vitest run` puis `npx tsc -b`
 Expected : PASS, aucune erreur. Vérifier aussi `grep -rn "useChessGame\|ChessMenuScreen\|ChessGameRoutes\|chess-menu\|loadSavedChessGame" src tests vite.config.ts` : rien.
 
-- [ ] **Step 9 : Vérifier les échecs dans le vrai navigateur**
+- [x] **Step 9 : Vérifier les échecs dans le vrai navigateur**
 
 Run : `npm run e2e`
 Expected : les 7 scénarios de l'étape 1 passent toujours (les adresses `#/echecs/…` sont inchangées).
 
-- [ ] **Step 10 : Commit**
+- [x] **Step 10 : Commit**
 
 ```bash
 git add -A src tests
@@ -2077,7 +2077,7 @@ git commit -m "refactor: kit de jeu et écrans génériques pour accueillir les 
 
 Numérotation FMJD (vue des Blancs, ligne 0 en haut) : ligne `r` contient les cases `5r+1` à `5r+5` ; sur les lignes paires elles sont aux colonnes 1, 3, 5, 7, 9, sur les lignes impaires aux colonnes 0, 2, 4, 6, 8. Les Noirs occupent 1 à 20 (en haut), les Blancs 31 à 50 (en bas) ; la grande diagonale va de 46 à 5.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/draughts/squares.test.ts`**
 ```ts
@@ -2198,12 +2198,12 @@ describe('plateau numéroté', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/draughts tests/unit/board/numbered.test.tsx`
 Expected : FAIL — modules `src/draughts/*` introuvables.
 
-- [ ] **Step 3 : Écrire les types et les cases**
+- [x] **Step 3 : Écrire les types et les cases**
 
 **Fichier : `src/draughts/types.ts`**
 ```ts
@@ -2297,7 +2297,7 @@ export function promotionRow(side: 1 | -1): number {
 }
 ```
 
-- [ ] **Step 4 : Écrire le plateau des dames et les numéros de cases**
+- [x] **Step 4 : Écrire le plateau des dames et les numéros de cases**
 
 **Fichier : `src/draughts/geometry.ts`**
 ```ts
@@ -2352,7 +2352,7 @@ Dans `src/styles/global.css`, après la ligne `.coord-on-dark { fill: #f0d9b5; }
 .sq-num { font-size: 22px; font-weight: 700; fill: rgb(255 255 255 / 0.6); }
 ```
 
-- [ ] **Step 5 : Dessiner les pièces**
+- [x] **Step 5 : Dessiner les pièces**
 
 **Fichier : `src/draughts/pieces/wM.svg`**
 ```svg
@@ -2456,12 +2456,12 @@ export function lostPieceCounts(pos: DraughtsPos): Readonly<Record<Color, number
 }
 ```
 
-- [ ] **Step 6 : Lancer les tests**
+- [x] **Step 6 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/draughts tests/unit/board` puis `npx tsc -b`
 Expected : PASS (3 + 3 + 4 + 1 nouveaux tests, anciens tests du plateau inchangés), aucune erreur.
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/draughts src/board src/styles/global.css tests/unit/draughts tests/unit/board/numbered.test.tsx
@@ -2484,7 +2484,7 @@ git commit -m "feat: plateau de dames numéroté, cases et pièces"
 
 Algorithme des prises (`captureSequences`) : la pièce quitte sa case (qui devient libre pour toute la rafle), puis on explore récursivement les 4 directions. Un pion saute une pièce adverse adjacente vers la case juste derrière ; une dame glisse sur les cases vides, saute la première pièce rencontrée si elle est adverse et pas déjà prise, et peut s'arrêter sur chaque case vide qui suit. Les pièces déjà prises **restent sur le plateau** jusqu'à la fin : elles bloquent et ne peuvent pas être ressautées (coup turc). Une séquence est gardée quand elle ne peut plus continuer. On ne garde ensuite que les séquences au nombre de prises maximal, et on fusionne celles qui ont même départ, même arrivée et mêmes pièces prises (règle FMJD).
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/draughts/notation.test.ts`**
 ```ts
@@ -2623,12 +2623,12 @@ describe('génération des coups (règles FMJD)', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/draughts/movegen.test.ts tests/unit/draughts/notation.test.ts`
 Expected : FAIL — modules `movegen` et `notation` introuvables.
 
-- [ ] **Step 3 : Écrire `src/draughts/movegen.ts`**
+- [x] **Step 3 : Écrire `src/draughts/movegen.ts`**
 
 **Fichier : `src/draughts/movegen.ts`**
 ```ts
@@ -2769,7 +2769,7 @@ export function applyRawMove(cells: Cells, move: RawMove): void {
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/draughts/notation.ts`**
+- [x] **Step 4 : Écrire `src/draughts/notation.ts`**
 
 **Fichier : `src/draughts/notation.ts`**
 ```ts
@@ -2824,12 +2824,12 @@ export function toFen(board: string, turn: Color): string {
 }
 ```
 
-- [ ] **Step 5 : Lancer les tests**
+- [x] **Step 5 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/draughts/movegen.test.ts tests/unit/draughts/notation.test.ts` puis `npx tsc -b`
 Expected : PASS (17 + 11 tests), perft conforme aux 6 valeurs de la spec, aucune erreur de typage. Si un perft échoue, corriger `movegen.ts` (jamais les valeurs attendues).
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add src/draughts/movegen.ts src/draughts/notation.ts tests/unit/draughts/movegen.test.ts tests/unit/draughts/notation.test.ts
@@ -2850,7 +2850,7 @@ git commit -m "feat: génération des coups de dames (FMJD) vérifiée par perft
 
 Décomptes : `kingPlies` passe à 0 après une prise ou un coup de pion, sinon +1 ; nulle à 50 (25 coups de chaque camp). `endgame` : quand une des configurations FMJD apparaît, `plies` part de 0 et augmente à chaque demi-coup tant que la règle (16 ou 5) reste la même ; nulle à `rule × 2`. Répétition : clés `plateau + trait` depuis le dernier coup irréversible ; nulle à la 3ᵉ occurrence. La victoire (adversaire sans coup) est testée avant les nulles.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/draughts/rules.test.ts`**
 ```ts
@@ -2941,12 +2941,12 @@ describe('règles des dames', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/draughts/rules.test.ts`
 Expected : FAIL — module `rules` introuvable.
 
-- [ ] **Step 3 : Écrire `src/draughts/rules.ts`**
+- [x] **Step 3 : Écrire `src/draughts/rules.ts`**
 
 **Fichier : `src/draughts/rules.ts`**
 ```ts
@@ -3041,7 +3041,8 @@ export function play(pos: DraughtsPos, move: DraughtsMove): DraughtsPos {
     turn,
     keys: irreversible ? [key] : [...pos.keys, key],
     kingPlies: irreversible ? 0 : pos.kingPlies + 1,
-    endgame: rule === null ? null : { rule, plies: pos.endgame?.rule === rule ? pos.endgame.plies + 1 : 0 },
+    // Le compte repart de zéro dès que la configuration change : autre règle, ou pièce prise.
+    endgame: rule === null ? null : { rule, plies: raw.captures.length === 0 && pos.endgame?.rule === rule ? pos.endgame.plies + 1 : 0 },
   };
 }
 
@@ -3093,12 +3094,12 @@ export const draughtsLessonRules: LessonRules<DraughtsPos, DraughtsMove> = {
 };
 ```
 
-- [ ] **Step 4 : Lancer les tests**
+- [x] **Step 4 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/draughts` puis `npx tsc -b`
 Expected : PASS (dont 9 nouveaux tests), aucune erreur.
 
-- [ ] **Step 5 : Commit**
+- [x] **Step 5 : Commit**
 
 ```bash
 git add src/draughts/rules.ts tests/unit/draughts/rules.test.ts
@@ -3120,7 +3121,7 @@ git commit -m "feat: règles de partie des dames (victoire, répétition, 25 cou
 
 Recherche (spec §5.2) : approfondissement itératif ; négamax alpha-bêta avec fenêtre principale (PVS) ; table de transposition (hachage de Zobrist, deux moitiés de 26 bits pour rester des entiers exacts) ; tri des coups (coup de la table, coups meurtriers, historique, promotions) ; réduction d'un demi-coup pour les coups tardifs hors prise ; **quiescence** : à profondeur ≤ 0 on continue tant qu'une prise est obligatoire, sinon on évalue. Une position sans coup vaut `-(WIN_SCORE - ply)`. Le temps est vérifié tous les 1 024 nœuds (sauf pendant la profondeur 1, jamais interrompue) ; une nouvelle profondeur ne commence pas si la moitié du temps est déjà passée. Avec `rootScores`, chaque coup racine est cherché à fenêtre complète pour avoir sa note exacte (niveaux Faible et Moyen). Le tableau de cases est créé dans `runSearch` : les mutations ne sortent jamais de ce module.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/draughts/engine/evaluate.test.ts`**
 ```ts
@@ -3205,12 +3206,12 @@ describe('recherche du moteur de dames', () => {
 
 La position du sacrifice : les Blancs jouent 32-28 ; les Noirs doivent prendre 23x32 (seule prise, la case 33 bloque 22x33 et la case 43 bloque la suite de la rafle) ; les Blancs reprennent 38x27x18 (les pions de 32 et de 22).
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/draughts/engine`
 Expected : FAIL — modules `evaluate` et `search` introuvables.
 
-- [ ] **Step 3 : Écrire `src/draughts/engine/evaluate.ts`**
+- [x] **Step 3 : Écrire `src/draughts/engine/evaluate.ts`**
 
 **Fichier : `src/draughts/engine/evaluate.ts`**
 ```ts
@@ -3308,7 +3309,7 @@ export function evaluate(cells: Cells, side: Side): number {
 }
 ```
 
-- [ ] **Step 4 : Écrire `src/draughts/engine/search.ts`**
+- [x] **Step 4 : Écrire `src/draughts/engine/search.ts`**
 
 **Fichier : `src/draughts/engine/search.ts`**
 ```ts
@@ -3625,12 +3626,12 @@ export function runSearch(request: SearchRequest, now: () => number = Date.now):
 }
 ```
 
-- [ ] **Step 5 : Lancer les tests**
+- [x] **Step 5 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/draughts/engine` puis `npx tsc -b`
 Expected : PASS (4 + 6 tests), aucune erreur.
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add src/draughts/engine tests/unit/draughts/engine
@@ -3657,7 +3658,7 @@ git commit -m "feat: évaluation et recherche alpha-bêta du moteur de dames"
   - `draughts-engine.ts` : `DraughtsEngineOptions { rng?; sleep?; now?; levels? }`, `evaluationOfScore(score): Evaluation`, `class DraughtsEngine implements Engine<DraughtsPos, DraughtsMove>`.
   - `index.ts` : `getDraughtsEngine(): DraughtsEngine`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/draughts/engine/levels.test.ts`**
 ```ts
@@ -3903,12 +3904,12 @@ describe('WorkerSearcher', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/draughts/engine`
 Expected : FAIL — modules `levels`, `pick`, `searcher`, `worker-searcher`, `draughts-engine` introuvables.
 
-- [ ] **Step 3 : Écrire les niveaux et le choix du coup**
+- [x] **Step 3 : Écrire les niveaux et le choix du coup**
 
 **Fichier : `src/draughts/engine/levels.ts`**
 ```ts
@@ -3978,7 +3979,7 @@ export function pickDraughtsMove(
 }
 ```
 
-- [ ] **Step 4 : Écrire les chercheurs (fil courant et Web Worker)**
+- [x] **Step 4 : Écrire les chercheurs (fil courant et Web Worker)**
 
 **Fichier : `src/draughts/engine/searcher.ts`**
 ```ts
@@ -4112,7 +4113,7 @@ scope.onmessage = (event) => {
 };
 ```
 
-- [ ] **Step 5 : Écrire le moteur de dames**
+- [x] **Step 5 : Écrire le moteur de dames**
 
 **Fichier : `src/draughts/engine/draughts-engine.ts`**
 ```ts
@@ -4224,12 +4225,12 @@ Dans `vite.config.ts`, dans `coverage.exclude`, ajouter après `'src/chess/engin
         'src/draughts/engine/index.ts',
 ```
 
-- [ ] **Step 6 : Lancer les tests, le typage et le build**
+- [x] **Step 6 : Lancer les tests, le typage et le build**
 
 Run : `npx vitest run tests/unit/draughts` puis `npx tsc -b` puis `npm run build`
 Expected : PASS (dont 4 + 10 + 5 nouveaux tests), aucune erreur ; le build produit un fichier `dist/assets/worker-*.js` (vérifier avec `ls dist/assets | grep worker`).
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/draughts/engine tests/unit/draughts/engine vite.config.ts
@@ -4251,7 +4252,7 @@ git commit -m "feat: niveaux du moteur de dames, Web Worker avec délai, annulat
   - `help/blunder.ts` : `DRAUGHTS_BLUNDER_THRESHOLD_CP = 200`, `detectDraughtsBlunder(pos, move, before, afterForOpponent): BlunderVerdict`.
   - `explain.ts` : `explainDraughtsResult(status, viewer): ResultText`.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/draughts/help.test.ts`**
 ```ts
@@ -4357,12 +4358,12 @@ describe('fin de partie aux dames', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/draughts/help.test.ts tests/unit/draughts/explain.test.ts`
 Expected : FAIL — modules introuvables.
 
-- [ ] **Step 3 : Écrire l'indice et l'alerte de gaffe**
+- [x] **Step 3 : Écrire l'indice et l'alerte de gaffe**
 
 **Fichier : `src/draughts/help/hint.ts`**
 ```ts
@@ -4472,12 +4473,12 @@ export function explainDraughtsResult(status: GameStatus, viewer: Color | null):
 }
 ```
 
-- [ ] **Step 4 : Lancer les tests**
+- [x] **Step 4 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/draughts` puis `npx tsc -b`
 Expected : PASS (dont 5 + 5 + 2 nouveaux tests), aucune erreur.
 
-- [ ] **Step 5 : Commit**
+- [x] **Step 5 : Commit**
 
 ```bash
 git add src/draughts/help src/draughts/explain.ts tests/unit/draughts/help.test.ts tests/unit/draughts/explain.test.ts
@@ -4497,7 +4498,7 @@ git commit -m "feat: indice, alerte de gaffe et textes de fin de partie pour les
 
 Les positions ont été vérifiées à la main case par case (voisins diagonaux tirés de la numérotation de la tâche 3) ; le test ci-dessous les revérifie avec les vraies règles. Si un exercice échoue, corriger la **donnée** de la leçon, jamais le test.
 
-- [ ] **Step 1 : Écrire le test qui échoue**
+- [x] **Step 1 : Écrire le test qui échoue**
 
 **Fichier : `tests/unit/draughts/lessons.test.ts`**
 ```ts
@@ -4583,12 +4584,12 @@ describe('leçons de dames', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer le test pour vérifier qu'il échoue**
+- [x] **Step 2 : Lancer le test pour vérifier qu'il échoue**
 
 Run : `npx vitest run tests/unit/draughts/lessons.test.ts`
 Expected : FAIL — module `src/draughts/lessons` introuvable.
 
-- [ ] **Step 3 : Écrire les leçons 1 à 6**
+- [x] **Step 3 : Écrire les leçons 1 à 6**
 
 **Fichier : `src/draughts/lessons/basics.ts`**
 ```ts
@@ -4698,7 +4699,7 @@ export const BASIC_LESSONS: readonly Lesson[] = [
 ];
 ```
 
-- [ ] **Step 4 : Écrire les leçons 7 à 12**
+- [x] **Step 4 : Écrire les leçons 7 à 12**
 
 **Fichier : `src/draughts/lessons/advanced.ts`**
 ```ts
@@ -4852,12 +4853,12 @@ export function findDraughtsLesson(id: string): Lesson | undefined {
 }
 ```
 
-- [ ] **Step 5 : Lancer le test**
+- [x] **Step 5 : Lancer le test**
 
 Run : `npx vitest run tests/unit/draughts/lessons.test.ts`
 Expected : PASS (1 + 12 + 20 tests).
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add src/draughts/lessons tests/unit/draughts/lessons.test.ts
@@ -4877,7 +4878,7 @@ git commit -m "feat: 12 leçons de dames interactives"
 - Consumes: tout ce qui précède (`GameKit`, règles, moteur, vue, aide, leçons, textes des dames).
 - Produces : `draughtsKit: GameKit<DraughtsPos, DraughtsMove>`, `CapturePicker` (choix entre rafles de même trajet), `withKit('draughts', …)` rend le kit, bouton « Dames » actif à l'accueil.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/app/games.test.ts`**
 ```ts
@@ -4984,12 +4985,12 @@ Dans `tests/unit/app/App.test.tsx`, ajouter avant la dernière ligne `});` :
   });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/app`
 Expected : FAIL — `games/draughts` et `CapturePicker` introuvables, bouton « Dames » désactivé, adresses `#/dames` renvoyées vers l'accueil.
 
-- [ ] **Step 3 : Écrire le choix de rafle et le kit des dames**
+- [x] **Step 3 : Écrire le choix de rafle et le kit des dames**
 
 **Fichier : `src/app/components/CapturePicker.tsx`**
 ```tsx
@@ -5067,7 +5068,7 @@ export const draughtsKit: GameKit<DraughtsPos, DraughtsMove> = {
 };
 ```
 
-- [ ] **Step 4 : Brancher les dames**
+- [x] **Step 4 : Brancher les dames**
 
 **Fichier : `src/app/games/index.ts`**
 ```ts
@@ -5114,17 +5115,17 @@ par :
           pour cette application. Cette application est un logiciel libre sous licence GPL-3.0.
 ```
 
-- [ ] **Step 5 : Lancer les tests, le typage et la couverture**
+- [x] **Step 5 : Lancer les tests, le typage et la couverture**
 
 Run : `npx vitest run` puis `npx tsc -b` puis `npm run test:coverage`
 Expected : PASS, aucune erreur, couverture ≥ 80 % sur les quatre indicateurs.
 
-- [ ] **Step 6 : Vérifier à la main dans le navigateur**
+- [x] **Step 6 : Vérifier à la main dans le navigateur**
 
 Run : `npm run dev`, ouvrir l'adresse affichée en format téléphone.
 Expected : Accueil → Dames → Apprendre à jouer → leçon 1 réussie ; « 2 joueurs sur ce téléphone » : les numéros des cases s'affichent, une prise est obligatoire (les autres pièces ne se sélectionnent pas) ; « Contre l'ordinateur » en Faible : l'ordinateur répond sans figer l'écran, « Indice » affiche une flèche ; recharger la page reprend la partie.
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add src/app tests/unit/app
@@ -5144,7 +5145,7 @@ git commit -m "feat: les dames dans l'app (kit, choix de rafle, accueil)"
 
 Seuils des matchs de dames : la spec (§10) fixe « Expert bat Moyen ≥ 9 sur 10, Moyen bat Faible ≥ 8 sur 10 ». Les dames finissent beaucoup plus souvent nulles que les échecs (et les fins à 16 / 5 coups rendent nulles bien des finales gagnées au matériel) : pour Expert contre Moyen, le test exige **au moins 6 victoires et aucune défaite** sur 10 ; Moyen contre Faible garde le seuil de la spec (≥ 8 victoires). Cet écart est à signaler dans le compte rendu. Temps réduit pour les matchs : Expert 300 ms.
 
-- [ ] **Step 1 : Écrire les scénarios de bout en bout**
+- [x] **Step 1 : Écrire les scénarios de bout en bout**
 
 **Fichier : `tests/e2e/draughts.spec.ts`**
 ```ts
@@ -5193,12 +5194,12 @@ test('dames contre l’ordinateur en Faible : réponse et indice', async ({ page
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests de bout en bout**
+- [x] **Step 2 : Lancer les tests de bout en bout**
 
 Run : `npm run e2e`
 Expected : 10 scénarios PASS (7 échecs + 3 dames). En cas d'échec, lire la trace (`npx playwright show-trace test-results/<dossier>/trace.zip`) et corriger le **code** de l'app.
 
-- [ ] **Step 3 : Écrire les tests de force des dames**
+- [x] **Step 3 : Écrire les tests de force des dames**
 
 **Fichier : `tests/strength/draughts-strength.test.ts`**
 ```ts
@@ -5265,18 +5266,18 @@ describe('force de l’IA de dames', () => {
 
 Seconde position tactique : après 32-28 et la prise forcée 23x32, les Blancs jouent 38x27x18x7 et prennent trois pions (32, 22, 12) pour un.
 
-- [ ] **Step 4 : Lancer les tests de force**
+- [x] **Step 4 : Lancer les tests de force**
 
 Run : `npm run test:strength`
 Expected : PASS (5 tests d'échecs + 4 de dames, plusieurs minutes). Si un match échoue de peu, relancer une fois (hasard des niveaux Faible et Moyen). S'il échoue encore, revoir l'évaluation ou les niveaux (spec §5.2) sans baisser les seuils, et le signaler.
 
-- [ ] **Step 5 : Vérification finale de l'étape 2**
+- [x] **Step 5 : Vérification finale de l'étape 2**
 
 Run : `npm run test:coverage` → PASS, couverture ≥ 80 % sur les quatre indicateurs.
 Run : `npm run build` → build réussi ; `grep -o 'worker-[A-Za-z0-9_-]*\.js' dist/sw.js | sort -u` affiche le fichier du worker des dames (précaché pour le hors-ligne).
 Run : `npm run e2e` → 10 scénarios PASS.
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add tests/e2e/draughts.spec.ts tests/strength/draughts-strength.test.ts
@@ -5303,3 +5304,9 @@ git commit -m "test: dames de bout en bout et force de l'IA"
 | 12 leçons de dames dans l'ordre de §6.3, validées par un test | 9 |
 | 2 joueurs sur le même téléphone, sauvegarde et reprise, écran de fin expliqué (§4) | 2, 5, 8, 10, 11 |
 | Tests : unitaires ≥ 80 %, bout en bout, coups tactiques et matchs (§10) | toutes, 11 |
+
+## Écarts constatés à l'exécution
+
+- **Tâche 7, étape 6** : le fichier `worker-*.js` n'apparaît dans le build qu'à partir de la tâche 10, quand l'app importe enfin le moteur de dames ; la vérification a été faite à la tâche 11 (worker présent et précaché par le service worker).
+- **Relecture de code (après la tâche 11)** : le compte des fins de partie à 16 / 5 coups ne repartait pas de zéro après une prise qui gardait la même règle (ex. dame + pion contre dame, la dame seule prend le pion). Corrigé dans `rules.ts` (extrait ci-dessus mis à jour) avec le test « recommence le compte des fins de partie après une prise ».
+- **Force mesurée** (Expert à 300 ms, soit la profondeur 9, au lieu des 3 s de l'app) : Expert contre Moyen = 8 victoires, 2 nulles, 0 défaite ; Moyen contre Faible = 10 victoires sur 10. Le seuil de la spec pour Expert contre Moyen (9 victoires sur 10) n'est pas atteint dans ces conditions ; le test exige 6 victoires et aucune défaite.
