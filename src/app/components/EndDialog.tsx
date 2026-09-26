@@ -1,4 +1,4 @@
-import type { ResultText } from '../../chess/explain';
+import type { ResultText } from '../../core/explain';
 
 interface EndDialogProps {
   readonly result: ResultText;

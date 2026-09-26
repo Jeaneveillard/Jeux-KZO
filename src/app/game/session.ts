@@ -1,9 +1,9 @@
-import { opposite, type Color, type GameAdapter, type GameStatus, type Level } from '../../core/types';
+import { opposite, type Color, type GameAdapter, type GameId, type GameStatus, type Level } from '../../core/types';
 
 export type GameMode = 'ai' | 'local';
 
 export interface GameSetup {
-  readonly game: 'chess';
+  readonly game: GameId;
   readonly mode: GameMode;
   /** null en mode 2 joueurs. */
   readonly level: Level | null;

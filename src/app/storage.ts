@@ -17,6 +17,8 @@ export const STORAGE_KEYS = {
   settings: 'jeux.reglages',
   chessProgress: 'jeux.echecs.progression',
   chessSavedGame: 'jeux.echecs.partie',
+  draughtsProgress: 'jeux.dames.progression',
+  draughtsSavedGame: 'jeux.dames.partie',
 } as const;
 
 /** Renvoie le localStorage s'il accepte d'écrire, sinon null (navigation privée, stockage bloqué). */

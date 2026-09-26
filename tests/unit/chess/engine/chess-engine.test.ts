@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { chessAdapter } from '../../../../src/chess/adapter';
 import { ChessEngine } from '../../../../src/chess/engine/chess-engine';
-import { EngineAbortError, EngineUnavailableError } from '../../../../src/chess/engine/errors';
+import { EngineAbortError, EngineUnavailableError } from '../../../../src/core/engine-errors';
 import { LEVELS } from '../../../../src/chess/engine/levels';
 import { StockfishClient } from '../../../../src/chess/engine/stockfish-client';
 import { FakeTransport, standardResponder, type Responder } from './fake-transport';

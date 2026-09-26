@@ -29,6 +29,4 @@ export function pieceLabel(color: Color, type: PieceType): string {
   return `${name[0].toUpperCase()}${name.slice(1)} ${adjective}`;
 }
 
-export function sideName(color: Color): string {
-  return color === 'white' ? 'les Blancs' : 'les Noirs';
-}
+export { sideName } from '../core/explain';

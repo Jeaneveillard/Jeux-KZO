@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { EMPTY_INPUT, dropPiece, tapSquare, type InputResult, type InputState } from '../../board/move-input';
-import { engineErrorMessage } from '../../chess/engine/errors';
+import { engineErrorMessage } from '../../core/engine-errors';
 import { chessLessonRules } from '../../chess/lesson-rules';
 import type { ChessMove, ChessPos } from '../../chess/types';
 import type { Engine } from '../../core/types';
