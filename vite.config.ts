@@ -50,6 +50,8 @@ export default defineConfig({
         'src/chess/engine/index.ts',
         'src/draughts/engine/worker.ts',
         'src/draughts/engine/index.ts',
+        'src/online/client.ts',
+        'src/online/index.ts',
       ],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
