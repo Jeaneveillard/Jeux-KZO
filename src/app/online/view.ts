@@ -27,6 +27,12 @@ export function colorOf(game: OnlineGame, userId: string): Color | null {
   return null;
 }
 
+/** Garde la version la plus récente d'une même partie : une relecture lente ne doit pas effacer une réponse plus récente. */
+export function newerGame(previous: OnlineGame | null, next: OnlineGame): OnlineGame {
+  if (!previous || previous.id !== next.id) return next;
+  return Date.parse(next.updatedAt) < Date.parse(previous.updatedAt) ? previous : next;
+}
+
 /** Les deux jeux commencent par les Blancs : le trait se déduit du nombre de coups. */
 export function turnOf(game: OnlineGame): Color {
   return game.moves.length % 2 === 0 ? 'white' : 'black';

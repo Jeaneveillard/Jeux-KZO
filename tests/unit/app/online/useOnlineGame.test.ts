@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { chessKit } from '../../../../src/app/games/chess';
 import { useOnlineGame } from '../../../../src/app/online/useOnlineGame';
 import { OnlineError } from '../../../../src/online/errors';
+import type { OnlineGame } from '../../../../src/online/types';
 import { onlineGame } from '../../online/fixtures';
 import { fakeApi } from './fake-api';
 
@@ -88,5 +89,48 @@ describe('useOnlineGame', () => {
     });
     expect(await hook.result.current.cancel()).toBe(true);
     expect(fake.api.cancel).toHaveBeenCalledWith(onlineGame().id);
+  });
+
+  it('n’affiche pas deux fois un coup relu avant la réponse du serveur', async () => {
+    const { fake, hook } = setup();
+    await waitFor(() => expect(hook.result.current.legal.length).toBeGreaterThan(0));
+    let answer: (game: OnlineGame) => void = () => undefined;
+    fake.api.playMove.mockImplementationOnce(
+      () =>
+        new Promise<OnlineGame>((resolve) => {
+          answer = resolve;
+        }),
+    );
+    act(() => hook.result.current.input.tap('e2'));
+    act(() => hook.result.current.input.tap('e4'));
+    const played = onlineGame({ moves: ['e2e4'], updatedAt: '2026-09-26T10:00:05Z' });
+    fake.set(played);
+    act(() => fake.changed());
+    await waitFor(() => expect(hook.result.current.game?.moves).toEqual(['e2e4']));
+    expect(hook.result.current.view?.invalidMove).toBe(false);
+    expect(hook.result.current.view?.session.moves).toHaveLength(1);
+    act(() => answer(played));
+    await waitFor(() => expect(hook.result.current.busy).toBe(false));
+    expect(hook.result.current.view?.session.moves).toHaveLength(1);
+  });
+
+  it('bloque les actions pendant une revanche en cours', async () => {
+    const { fake, hook } = setup(fakeApi(onlineGame({ status: 'terminee', result: { kind: 'win', winner: 'black', reason: 'resign' } })));
+    await waitFor(() => expect(hook.result.current.game).not.toBeNull());
+    let done: (game: OnlineGame) => void = () => undefined;
+    fake.api.rematch.mockImplementationOnce(
+      () =>
+        new Promise<OnlineGame>((resolve) => {
+          done = resolve;
+        }),
+    );
+    let code: Promise<string | null> = Promise.resolve(null);
+    act(() => {
+      code = hook.result.current.rematch();
+    });
+    expect(hook.result.current.busy).toBe(true);
+    act(() => done(onlineGame({ code: 'REVAN2' })));
+    expect(await code).toBe('REVAN2');
+    await waitFor(() => expect(hook.result.current.busy).toBe(false));
   });
 });

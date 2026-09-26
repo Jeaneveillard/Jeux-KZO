@@ -119,7 +119,7 @@ export function OnlineGameScreen<Pos, Move extends MoveShape>(props: OnlineGameS
     return frame(
       <>
         {status}
-        <WaitingRoom code={game.code} title={kit.title} onCancel={cancel} />
+        <WaitingRoom code={game.code} title={kit.title} onCancel={cancel} busy={online.busy} />
       </>,
     );
   }
@@ -180,7 +180,7 @@ export function OnlineGameScreen<Pos, Move extends MoveShape>(props: OnlineGameS
             </button>
           )}
           {finished && (
-            <button type="button" class="btn btn-small btn-primary" onClick={rematch}>
+            <button type="button" class="btn btn-small btn-primary" onClick={rematch} disabled={online.busy}>
               {game.rematchCode ? 'Jouer la revanche' : 'Revanche'}
             </button>
           )}
@@ -208,6 +208,7 @@ export function OnlineGameScreen<Pos, Move extends MoveShape>(props: OnlineGameS
           replayLabel={game.rematchCode ? 'Jouer la revanche' : 'Revanche'}
           note={game.rematchCode ? `${view.opponentName} lance une revanche !` : undefined}
           onReplay={rematch}
+          busy={online.busy}
           onMenu={toList}
           onClose={() => setEndDismissed(true)}
         />

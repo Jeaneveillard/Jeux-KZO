@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { chessKit } from '../../../../src/app/games/chess';
 import { draughtsKit } from '../../../../src/app/games/draughts';
-import { buildOnlineView, colorOf, listEntries, onlineStatusText, resultAfter, turnOf } from '../../../../src/app/online/view';
+import { buildOnlineView, colorOf, listEntries, newerGame, onlineStatusText, resultAfter, turnOf } from '../../../../src/app/online/view';
 import { parseChess } from '../../../../src/chess/adapter';
 import { onlineGame } from '../../online/fixtures';
 
@@ -71,5 +71,15 @@ describe('vue d’une partie en ligne', () => {
     expect(colorOf(onlineGame(), 'moi')).toBe('white');
     expect(colorOf(onlineGame(), 'intrus')).toBeNull();
     expect(turnOf(onlineGame({ moves: ['e2e4'] }))).toBe('black');
+  });
+
+  it('garde la version la plus récente d’une même partie', () => {
+    const older = onlineGame({ updatedAt: '2026-09-26T10:00:00Z' });
+    const newer = onlineGame({ moves: ['e2e4'], updatedAt: '2026-09-26T10:00:05.123+00:00' });
+    expect(newerGame(null, older)).toBe(older);
+    expect(newerGame(older, newer)).toBe(newer);
+    expect(newerGame(newer, older)).toBe(newer);
+    const other = onlineGame({ id: '22222222-2222-4222-8222-222222222222', updatedAt: '2026-09-26T09:00:00Z' });
+    expect(newerGame(newer, other)).toBe(other);
   });
 });

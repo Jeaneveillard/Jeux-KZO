@@ -6,9 +6,15 @@ import { isOnlineError, onlineErrorMessage } from '../../online/errors';
 import type { OnlineGame } from '../../online/types';
 import { currentPosition } from '../game/session';
 import { playSound } from '../sound';
-import { buildOnlineView, resultAfter, type OnlineRules, type OnlineView } from './view';
+import { buildOnlineView, newerGame, resultAfter, type OnlineRules, type OnlineView } from './view';
 
 const NOT_FOUND = "Cette partie n'existe plus, ou ce n'est pas la tienne.";
+
+interface PendingMove {
+  readonly text: string;
+  /** Nombre de coups confirmés au moment de l'envoi. */
+  readonly base: number;
+}
 
 export interface OnlineGameController<Pos, Move> {
   /** Dernière partie confirmée par le serveur. */
@@ -39,7 +45,7 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
   sound: boolean,
 ): OnlineGameController<Pos, Move> {
   const [game, setGame] = useState<OnlineGame | null>(null);
-  const [pending, setPending] = useState<string | null>(null);
+  const [pending, setPending] = useState<PendingMove | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -49,6 +55,8 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
   const alive = useRef(true);
   const seenMoves = useRef(-1);
 
+  const accept = (next: OnlineGame) => setGame((previous) => newerGame(previous, next));
+
   const refresh = () => {
     api
       .findGame(code)
@@ -56,7 +64,7 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
         if (!alive.current) return;
         setLoading(false);
         if (found) {
-          setGame(found);
+          accept(found);
           setError(null);
         } else {
           setError(NOT_FOUND);
@@ -114,7 +122,11 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
     seenMoves.current = game.moves.length;
   }, [game]);
 
-  const shown = useMemo(() => (game && pending ? { ...game, moves: [...game.moves, pending] } : game), [game, pending]);
+  // Le coup envoyé s'affiche tout de suite, tant que le serveur ne l'a pas renvoyé (réponse ou notification).
+  const shown = useMemo(
+    () => (game && pending && game.moves.length === pending.base ? { ...game, moves: [...game.moves, pending.text] } : game),
+    [game, pending],
+  );
   const view = useMemo(() => (shown ? buildOnlineView(rules, shown, userId) : null), [shown, userId]);
   const canPlay = view !== null && view.myTurn && connected && !busy && pending === null;
   const legal = useMemo(() => (canPlay && view ? rules.adapter.legalMoves(currentPosition(view.session)) : []), [view, canPlay]);
@@ -123,7 +135,7 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
     if (!game || !view || !canPlay) return;
     const encoded = rules.codec.encode(move);
     const result = resultAfter(rules, currentPosition(view.session), move);
-    setPending(encoded);
+    setPending({ text: encoded, base: game.moves.length });
     setBusy(true);
     setNotice(null);
     seenMoves.current = game.moves.length + 1;
@@ -137,7 +149,7 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
       .then((next) => {
         if (!alive.current) return;
         settle();
-        setGame(next);
+        accept(next);
       })
       .catch((failure: unknown) => {
         if (!alive.current) return;
@@ -155,7 +167,7 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
     setNotice(null);
     action(game.id)
       .then((next) => {
-        if (alive.current) setGame(next);
+        if (alive.current) accept(next);
       })
       .catch((failure: unknown) => {
         if (!alive.current) return;
@@ -182,7 +194,8 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
     answerDraw: (accept) => act((id) => api.answerDraw(id, accept)),
     resign: () => act((id) => api.resign(id)),
     cancel: async () => {
-      if (!game) return false;
+      if (!game || busy) return false;
+      setBusy(true);
       try {
         await api.cancel(game.id);
         return true;
@@ -190,15 +203,20 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
         setNotice(onlineErrorMessage(failure));
         refresh();
         return false;
+      } finally {
+        if (alive.current) setBusy(false);
       }
     },
     rematch: async () => {
-      if (!game) return null;
+      if (!game || busy) return null;
+      setBusy(true);
       try {
         return (await api.rematch(game.id)).code;
       } catch (failure) {
         setNotice(onlineErrorMessage(failure));
         return null;
+      } finally {
+        if (alive.current) setBusy(false);
       }
     },
     refresh,

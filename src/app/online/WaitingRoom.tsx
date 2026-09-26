@@ -6,6 +6,7 @@ interface WaitingRoomProps {
   readonly code: string;
   readonly title: string;
   readonly onCancel: () => void;
+  readonly busy: boolean;
 }
 
 const SHARE_FEEDBACK: Readonly<Record<ShareOutcome, string | null>> = {
@@ -16,7 +17,7 @@ const SHARE_FEEDBACK: Readonly<Record<ShareOutcome, string | null>> = {
 };
 
 /** Partie créée, ami pas encore arrivé : le code, le lien à partager, l'annulation. */
-export function WaitingRoom({ code, title, onCancel }: WaitingRoomProps) {
+export function WaitingRoom({ code, title, onCancel, busy }: WaitingRoomProps) {
   const [feedback, setFeedback] = useState<string | null>(null);
   const share = () => {
     void shareInvite(inviteLink(window.location.href, code), title).then((outcome) => setFeedback(SHARE_FEEDBACK[outcome]));
@@ -35,7 +36,7 @@ export function WaitingRoom({ code, title, onCancel }: WaitingRoomProps) {
         </p>
       )}
       <p class="muted">La partie commence dès que ton ami la rejoint.</p>
-      <button type="button" class="btn btn-small btn-danger" onClick={onCancel}>
+      <button type="button" class="btn btn-small btn-danger" onClick={onCancel} disabled={busy}>
         Annuler la partie
       </button>
     </div>

@@ -5,6 +5,24 @@ import type { OnlineConfig } from './config';
 import { OnlineError } from './errors';
 
 const LIST_LIMIT = 50;
+const REQUEST_TIMEOUT_MS = 15_000;
+
+/** Une requête sans réponse finit en panne (`indisponible`) au lieu de bloquer l'écran. */
+function withTimeout<T>(promise: PromiseLike<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new OnlineError('indisponible')), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error: unknown) => {
+        clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
 
 /** Serveur Supabase : session anonyme gardée sur le téléphone, fonctions `rpc`, lecture protégée par les règles d'accès. */
 export function createSupabaseBackend(config: OnlineConfig): Backend {
@@ -27,14 +45,19 @@ export function createSupabaseBackend(config: OnlineConfig): Backend {
     return user;
   };
 
-  /** Exécute une requête ; toute panne réseau devient une `OnlineError`. */
+  /** Exécute une requête ; toute panne réseau ou absence de réponse devient une `OnlineError`. */
   const run = async <T>(request: () => PromiseLike<{ data: T; error: { message: string } | null }>): Promise<T> => {
-    await userId();
     let response: { data: T; error: { message: string } | null };
     try {
-      response = await request();
+      response = await withTimeout(
+        (async () => {
+          await userId();
+          return request();
+        })(),
+        REQUEST_TIMEOUT_MS,
+      );
     } catch (error) {
-      throw new OnlineError('indisponible', error);
+      throw error instanceof OnlineError ? error : new OnlineError('indisponible', error);
     }
     if (response.error) throw OnlineError.fromServer(response.error.message);
     return response.data;

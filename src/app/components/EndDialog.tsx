@@ -9,16 +9,18 @@ interface EndDialogProps {
   readonly replayLabel?: string;
   /** Information en plus (ex. « Marie lance une revanche ! »). */
   readonly note?: string;
+  /** Requête en cours : le bouton principal est bloqué. */
+  readonly busy?: boolean;
 }
 
-export function EndDialog({ result, onReplay, onMenu, onClose, onUndo, replayLabel = 'Rejouer', note }: EndDialogProps) {
+export function EndDialog({ result, onReplay, onMenu, onClose, onUndo, replayLabel = 'Rejouer', note, busy = false }: EndDialogProps) {
   return (
     <div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="end-title">
       <div class="modal">
         <h2 id="end-title">{result.title}</h2>
         {result.detail && <p>{result.detail}</p>}
         {note && <p class="feedback feedback-info">{note}</p>}
-        <button type="button" class="btn btn-primary" onClick={onReplay}>
+        <button type="button" class="btn btn-primary" onClick={onReplay} disabled={busy}>
           {replayLabel}
         </button>
         {onUndo && (
