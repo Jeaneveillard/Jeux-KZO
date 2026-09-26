@@ -48,6 +48,7 @@ export default defineConfig({
         'src/app/game/useGame.ts',
         'src/app/online/useOnlineApi.ts',
         'src/app/online/useOnlineGame.ts',
+        'src/app/online/*.tsx',
         'src/chess/engine/transport.ts',
         'src/chess/engine/index.ts',
         'src/draughts/engine/worker.ts',

@@ -127,20 +127,23 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
     setBusy(true);
     setNotice(null);
     seenMoves.current = game.moves.length + 1;
+    // Réponse ou refus : tout change d'un coup (coup en attente retiré, partie ou message à jour).
+    const settle = () => {
+      setPending(null);
+      setBusy(false);
+    };
     api
       .playMove(game, encoded, result)
       .then((next) => {
-        if (alive.current) setGame(next);
+        if (!alive.current) return;
+        settle();
+        setGame(next);
       })
       .catch((failure: unknown) => {
         if (!alive.current) return;
+        settle();
         setNotice(isOnlineError(failure, 'conflit') ? 'La partie a changé : rejoue ton coup.' : onlineErrorMessage(failure));
         refresh();
-      })
-      .finally(() => {
-        if (!alive.current) return;
-        setPending(null);
-        setBusy(false);
       });
   };
 

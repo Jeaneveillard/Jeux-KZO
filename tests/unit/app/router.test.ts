@@ -12,6 +12,9 @@ const routes: Route[] = [
   { name: 'resume', game: 'chess' },
   { name: 'play', setup: { game: 'chess', mode: 'ai', level: 'expert', playerColor: 'black' } },
   { name: 'play', setup: { game: 'draughts', mode: 'local', level: null, playerColor: 'white' } },
+  { name: 'online', game: 'chess' },
+  { name: 'onlineGame', game: 'draughts', code: 'K7M2QX' },
+  { name: 'join', code: 'K7M2QX' },
 ];
 
 describe('routes', () => {
@@ -31,6 +34,15 @@ describe('routes', () => {
     expect(parseRoute('#/constructor')).toEqual({ name: 'home' });
     expect(parseRoute('#/echecs/partie/ordi/maitre/blancs')).toEqual({ name: 'menu', game: 'chess' });
     expect(parseRoute('#/echecs/%E0%A4%A')).toEqual({ name: 'home' });
+  });
+
+  it('lit les adresses du jeu en ligne', () => {
+    expect(routeToHash({ name: 'join', code: 'K7M2QX' })).toBe('#/rejoindre/K7M2QX');
+    expect(routeToHash({ name: 'onlineGame', game: 'chess', code: 'K7M2QX' })).toBe('#/echecs/en-ligne/K7M2QX');
+    expect(parseRoute('#/rejoindre/k7m2qx')).toEqual({ name: 'join', code: 'K7M2QX' });
+    expect(parseRoute('#/rejoindre/abc')).toEqual({ name: 'home' });
+    expect(parseRoute('#/rejoindre')).toEqual({ name: 'home' });
+    expect(parseRoute('#/dames/en-ligne/zz')).toEqual({ name: 'online', game: 'draughts' });
   });
 });
 

@@ -31,3 +31,8 @@ export function navigate(route: Route): void {
 export function replaceHash(route: Route): void {
   history.replaceState(null, '', routeToHash(route));
 }
+
+/** Change d'écran en remplaçant l'entrée d'historique : le retour arrière ne revient pas ici. */
+export function redirect(route: Route): void {
+  window.location.replace(routeToHash(route));
+}

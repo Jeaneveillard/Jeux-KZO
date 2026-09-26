@@ -2333,20 +2333,23 @@ export function useOnlineGame<Pos, Move extends MoveShape>(
     setBusy(true);
     setNotice(null);
     seenMoves.current = game.moves.length + 1;
+    // Réponse ou refus : tout change d'un coup (coup en attente retiré, partie ou message à jour).
+    const settle = () => {
+      setPending(null);
+      setBusy(false);
+    };
     api
       .playMove(game, encoded, result)
       .then((next) => {
-        if (alive.current) setGame(next);
+        if (!alive.current) return;
+        settle();
+        setGame(next);
       })
       .catch((failure: unknown) => {
         if (!alive.current) return;
+        settle();
         setNotice(isOnlineError(failure, 'conflit') ? 'La partie a changé : rejoue ton coup.' : onlineErrorMessage(failure));
         refresh();
-      })
-      .finally(() => {
-        if (!alive.current) return;
-        setPending(null);
-        setBusy(false);
       });
   };
 
@@ -2589,6 +2592,7 @@ describe('partie en ligne', () => {
     gameScreen(fake);
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe("C'est à Bob de jouer (hors ligne pour l'instant)"));
     expect(screen.getByRole('img', { name: "Bob n'est pas en ligne" })).toBeTruthy();
+    await waitFor(() => expect(fake.watching()).toBe(true));
     act(() => fake.presence(['moi', 'ami']));
     expect(screen.getByRole('status').textContent).toBe("C'est à Bob de jouer");
     expect(screen.getByRole('img', { name: 'Bob est en ligne' })).toBeTruthy();

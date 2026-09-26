@@ -45,6 +45,13 @@ describe('menu d’un jeu', () => {
       { name: 'play', setup: { game: 'draughts', mode: 'local', level: null, playerColor: 'white' } },
     ]);
   });
+
+  it('ouvre le jeu en ligne', () => {
+    const onNavigate = vi.fn();
+    render(<GameMenuScreen game="draughts" title="Dames" onNavigate={onNavigate} hasSavedGame={false} completedCount={0} totalLessons={12} notice={null} />);
+    fireEvent.click(screen.getByRole('button', { name: /En ligne/ }));
+    expect(onNavigate).toHaveBeenCalledWith({ name: 'online', game: 'draughts' });
+  });
 });
 
 describe('réglages', () => {
