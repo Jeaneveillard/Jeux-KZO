@@ -171,6 +171,15 @@ export function Board(props: BoardProps) {
               </text>
             </g>
           ))}
+        {geometry.numbered &&
+          allCells(geometry.size).map((cell) => {
+            const square = geometry.squareAt(cell);
+            return square ? (
+              <text key={`num-${square}`} x={cell.col * CELL + 6} y={cell.row * CELL + 24} class="sq-num">
+                {square}
+              </text>
+            ) : null;
+          })}
         {(props.highlights ?? []).map((square) => (
           <rect key={`hl-${square}`} {...origin(square)} width={CELL} height={CELL} class="hl-last" />
         ))}

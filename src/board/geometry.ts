@@ -11,6 +11,8 @@ export interface BoardGeometry {
   squareAt(cell: Cell): string | null;
   cellOf(square: string): Cell;
   isDark(cell: Cell): boolean;
+  /** Affiche le nom de chaque case jouable (numéros des dames). */
+  readonly numbered?: boolean;
   readonly edgeLabels?: {
     bottom(col: number): string;
     left(row: number): string;
