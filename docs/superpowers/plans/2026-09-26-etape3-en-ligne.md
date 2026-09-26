@@ -1380,13 +1380,13 @@ language plpgsql security definer set search_path = '' as $$
 declare
   partie public.parties := public.ma_partie(p_partie);
   joues integer := coalesce(array_length(partie.coups, 1), 0);
-  resultat jsonb := case when p_resultat is null or jsonb_typeof(p_resultat) = 'null' then null else p_resultat end;
+  fin jsonb := case when p_resultat is null or jsonb_typeof(p_resultat) = 'null' then null else p_resultat end;
 begin
   perform public.exiger_en_cours(partie);
   if p_numero is distinct from joues then
     raise exception 'conflit';
   end if;
-  if public.ma_couleur(partie) <> case when joues % 2 = 0 then 'white' else 'black' end then
+  if public.ma_couleur(partie) <> (case when joues % 2 = 0 then 'white' else 'black' end) then
     raise exception 'pas_ton_tour';
   end if;
   if p_coup is null or not (
@@ -1397,14 +1397,14 @@ begin
   ) then
     raise exception 'coup_invalide';
   end if;
-  if resultat is not null and not public.resultat_valide(resultat) then
+  if fin is not null and not public.resultat_valide(fin) then
     raise exception 'resultat_invalide';
   end if;
   update public.parties
   set coups = array_append(coups, p_coup),
       nulle_proposee_par = null,
-      statut = case when resultat is null then 'en_cours' else 'terminee' end,
-      resultat = jouer_coup.resultat
+      statut = case when fin is null then 'en_cours' else 'terminee' end,
+      resultat = fin
   where id = partie.id
   returning * into partie;
   return partie;
@@ -1559,7 +1559,7 @@ select cron.schedule(
 );
 ```
 
-Dans `jouer_coup`, `jouer_coup.resultat` désigne la variable locale (le nom de colonne `resultat` est identique) ; la valeur JSON `null` envoyée par l'app est traitée comme « pas de résultat ».
+Dans `jouer_coup`, la variable locale s'appelle `fin` (et non `resultat`, nom d'une colonne : PL/pgSQL refuserait la référence ambiguë) ; la valeur JSON `null` envoyée par l'app est traitée comme « pas de résultat ».
 
 - [ ] **Step 2 : Créer le projet Supabase « jeux-kzo »** (action sur le compte de l'utilisateur, annoncée)
 

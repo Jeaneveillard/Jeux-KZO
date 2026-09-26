@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:strength": "vitest run --config vitest.strength.config.ts",
+    "test:online": "vitest run --config vitest.online.config.ts",
     "e2e": "playwright test",
     "pieces": "node scripts/extract-pieces.mjs",
     "icons": "node scripts/make-icon.mjs && pwa-assets-generator"
