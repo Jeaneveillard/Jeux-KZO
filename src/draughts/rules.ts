@@ -89,7 +89,8 @@ export function play(pos: DraughtsPos, move: DraughtsMove): DraughtsPos {
     turn,
     keys: irreversible ? [key] : [...pos.keys, key],
     kingPlies: irreversible ? 0 : pos.kingPlies + 1,
-    endgame: rule === null ? null : { rule, plies: pos.endgame?.rule === rule ? pos.endgame.plies + 1 : 0 },
+    // Le compte repart de zéro dès que la configuration change : autre règle, ou pièce prise.
+    endgame: rule === null ? null : { rule, plies: raw.captures.length === 0 && pos.endgame?.rule === rule ? pos.endgame.plies + 1 : 0 },
   };
 }
 

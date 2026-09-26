@@ -73,6 +73,13 @@ describe('règles des dames', () => {
     expect(status({ ...pos, endgame: { rule: 16, plies: 32 } })).toEqual({ kind: 'draw', reason: 'endgame-limit' });
   });
 
+  it('recommence le compte des fins de partie après une prise', () => {
+    const pos = { ...parseDraughts('B:WK1,28:BK46'), endgame: { rule: 5, plies: 9 } } as const;
+    const after = play(pos, byId(pos, '46x19'));
+    expect(after.endgame).toEqual({ rule: 5, plies: 0 });
+    expect(status(after)).toEqual({ kind: 'ongoing' });
+  });
+
   it('redonne le trait pour les exercices des leçons', () => {
     const pos = setTurn(parseDraughts('W:W32:B'), 'white');
     const move = byId(pos, '32-28');
