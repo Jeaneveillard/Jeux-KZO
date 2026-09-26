@@ -32,8 +32,9 @@ describe('boîtes de dialogue', () => {
   });
 
   it('CapturedRow affiche les pièces prises', () => {
-    render(<CapturedRow color="black" pieces={['q', 'p']} />);
-    expect(screen.getByAltText('Dame noire')).toBeTruthy();
+    render(<CapturedRow color="black" pieces={[{ image: 'dame.svg', label: 'Dame noire' }, { image: 'pion.svg', label: 'Pion noir' }]} />);
+    expect(screen.getByAltText('Dame noire').getAttribute('src')).toBe('dame.svg');
     expect(screen.getByAltText('Pion noir')).toBeTruthy();
+    expect(screen.getByLabelText('Pièces noires prises')).toBeTruthy();
   });
 });

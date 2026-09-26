@@ -45,7 +45,7 @@ export default defineConfig({
         'src/app/sound.ts',
         'src/app/screens/**',
         'src/app/components/**',
-        'src/app/game/useChessGame.ts',
+        'src/app/game/useGame.ts',
         'src/chess/engine/transport.ts',
         'src/chess/engine/index.ts',
       ],

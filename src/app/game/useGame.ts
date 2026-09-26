@@ -1,55 +1,49 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { EMPTY_INPUT, dropPiece, tapSquare, type InputResult, type InputState } from '../../board/move-input';
-import { chessAdapter, chessMoveCodec, legalMoves, moveInfo, play, turnOf } from '../../chess/adapter';
-import { BLUNDER_DEPTH, HINT_DEPTH } from '../../chess/engine/levels';
+import { EMPTY_INPUT, dropPiece, tapSquare, type InputResult, type InputState, type MoveShape } from '../../board/move-input';
 import { engineErrorMessage } from '../../core/engine-errors';
-import { detectBlunder } from '../../chess/help/blunder';
 import type { BlunderVerdict } from '../../core/help';
-import { hintText } from '../../chess/help/hint';
-import type { ChessMove, ChessPos } from '../../chess/types';
 import type { Engine, Evaluation } from '../../core/types';
+import type { GameKit } from '../games/kit';
 import { logWarning } from '../log';
 import { playSound } from '../sound';
-import { STORAGE_KEYS, type AppStorage } from '../storage';
+import type { AppStorage } from '../storage';
 import { toRecord } from './record';
 import { applyMove, canUndo, currentPosition, isHumanTurn, resign, undoLastHumanMove, type Session } from './session';
 
-export type ChessSession = Session<ChessPos, ChessMove>;
-
-export interface Hint {
-  readonly move: ChessMove;
+export interface Hint<Move> {
+  readonly move: Move;
   readonly text: string;
 }
 
-export interface BlunderPrompt {
-  readonly move: ChessMove;
+export interface BlunderPrompt<Move> {
+  readonly move: Move;
   readonly message: string;
 }
 
-export interface ChessGameDeps {
-  readonly engine: () => Engine<ChessPos, ChessMove>;
+export interface GameDeps<Pos, Move> {
+  readonly engine: () => Engine<Pos, Move>;
   readonly storage: AppStorage;
   readonly sound: boolean;
 }
 
-export interface ChessGame {
-  readonly session: ChessSession;
-  readonly position: ChessPos;
-  readonly legal: readonly ChessMove[];
+export interface GameController<Pos, Move> {
+  readonly session: Session<Pos, Move>;
+  readonly position: Pos;
+  readonly legal: readonly Move[];
   readonly input: InputState;
-  readonly promotionChoices: readonly ChessMove[] | null;
+  readonly choices: readonly Move[] | null;
   readonly thinking: boolean;
   readonly checking: boolean;
-  readonly hint: Hint | null;
-  readonly blunder: BlunderPrompt | null;
+  readonly hint: Hint<Move> | null;
+  readonly blunder: BlunderPrompt<Move> | null;
   readonly engineError: string | null;
   readonly humanTurn: boolean;
   readonly undoAvailable: boolean;
   readonly faibleHelp: boolean;
   tap(square: string): void;
   drop(from: string, to: string): void;
-  choosePromotion(move: ChessMove): void;
-  cancelPromotion(): void;
+  choose(move: Move): void;
+  cancelChoice(): void;
   requestHint(): void;
   confirmBlunder(): void;
   cancelBlunder(): void;
@@ -58,48 +52,52 @@ export interface ChessGame {
   retryEngine(): void;
 }
 
-export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessGame {
+export function useGame<Pos, Move extends MoveShape>(
+  initial: Session<Pos, Move>,
+  kit: GameKit<Pos, Move>,
+  deps: GameDeps<Pos, Move>,
+): GameController<Pos, Move> {
+  const { adapter, help } = kit;
   const [session, setSession] = useState(initial);
   const [input, setInput] = useState<InputState>(EMPTY_INPUT);
-  const [promotionChoices, setPromotionChoices] = useState<readonly ChessMove[] | null>(null);
+  const [choices, setChoices] = useState<readonly Move[] | null>(null);
   const [thinking, setThinking] = useState(false);
   const [checking, setChecking] = useState(false);
-  const [hint, setHint] = useState<Hint | null>(null);
-  const [blunder, setBlunder] = useState<BlunderPrompt | null>(null);
+  const [hint, setHint] = useState<Hint<Move> | null>(null);
+  const [blunder, setBlunder] = useState<BlunderPrompt<Move> | null>(null);
   const [engineError, setEngineError] = useState<string | null>(null);
   const [engineAttempt, setEngineAttempt] = useState(0);
   const beforeEval = useRef<Promise<Evaluation> | null>(null);
 
   const position = currentPosition(session);
   const ongoing = session.result.kind === 'ongoing';
-  const humanTurn = ongoing && isHumanTurn(chessAdapter, session);
-  const legal = useMemo(() => (humanTurn ? legalMoves(position) : []), [position, humanTurn]);
+  const humanTurn = ongoing && isHumanTurn(adapter, session);
+  const legal = useMemo(() => (humanTurn ? adapter.legalMoves(position) : []), [position, humanTurn]);
   const faibleHelp = session.setup.mode === 'ai' && session.setup.level === 'faible';
   const busy = thinking || checking || blunder !== null;
 
-  const commit = (base: ChessSession, move: ChessMove) => {
-    const info = moveInfo(currentPosition(base), move);
-    const next = applyMove(chessAdapter, base, move);
+  const commit = (base: Session<Pos, Move>, move: Move) => {
+    const sound = kit.moveSound(currentPosition(base), move);
+    const next = applyMove(adapter, base, move);
     setSession(next);
     setHint(null);
     setInput(EMPTY_INPUT);
-    setPromotionChoices(null);
-    const kind = next.result.kind !== 'ongoing' ? 'end' : info.givesCheck ? 'check' : info.captured ? 'capture' : 'move';
-    playSound(kind, deps.sound);
+    setChoices(null);
+    playSound(next.result.kind !== 'ongoing' ? 'end' : sound, deps.sound);
   };
 
   // Sauvegarde automatique : partie en cours enregistrée, partie finie effacée.
   useEffect(() => {
     if (session.result.kind === 'ongoing') {
-      deps.storage.write(STORAGE_KEYS.chessSavedGame, toRecord(chessAdapter, chessMoveCodec, session));
+      deps.storage.write(kit.savedGameKey, toRecord(adapter, kit.codec, session));
     } else {
-      deps.storage.remove(STORAGE_KEYS.chessSavedGame);
+      deps.storage.remove(kit.savedGameKey);
     }
   }, [session]);
 
   // Tour de l'ordinateur.
   useEffect(() => {
-    if (session.setup.mode !== 'ai' || !ongoing || isHumanTurn(chessAdapter, session)) return undefined;
+    if (session.setup.mode !== 'ai' || !ongoing || isHumanTurn(adapter, session)) return undefined;
     const controller = new AbortController();
     setThinking(true);
     setEngineError(null);
@@ -125,23 +123,23 @@ export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessG
   useEffect(() => {
     beforeEval.current = null;
     if (!faibleHelp || !humanTurn) return;
-    const pending = deps.engine().analyse(position, BLUNDER_DEPTH);
+    const pending = deps.engine().analyse(position, help.blunderDepth);
     // Évite un rejet non géré : l'erreur est traitée là où la promesse est attendue (checkForBlunder).
     pending.catch(() => undefined);
     beforeEval.current = pending;
   }, [session]);
 
-  const checkForBlunder = async (base: ChessSession, move: ChessMove): Promise<BlunderVerdict> => {
+  const checkForBlunder = async (base: Session<Pos, Move>, move: Move): Promise<BlunderVerdict> => {
     const pos = currentPosition(base);
-    const before = await (beforeEval.current ?? deps.engine().analyse(pos, BLUNDER_DEPTH));
-    const after = play(pos, move);
-    if (chessAdapter.status(after).kind !== 'ongoing') return { blunder: false };
-    return detectBlunder(pos, move, before, await deps.engine().analyse(after, BLUNDER_DEPTH));
+    const before = await (beforeEval.current ?? deps.engine().analyse(pos, help.blunderDepth));
+    const after = adapter.play(pos, move);
+    if (adapter.status(after).kind !== 'ongoing') return { blunder: false };
+    return help.detectBlunder(pos, move, before, await deps.engine().analyse(after, help.blunderDepth));
   };
 
-  const submitHumanMove = (move: ChessMove) => {
+  const submitHumanMove = (move: Move) => {
     setInput(EMPTY_INPUT);
-    setPromotionChoices(null);
+    setChoices(null);
     if (!faibleHelp) {
       commit(session, move);
       return;
@@ -157,20 +155,20 @@ export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessG
       .finally(() => setChecking(false));
   };
 
-  const handleInput = (result: InputResult<ChessMove>) => {
+  const handleInput = (result: InputResult<Move>) => {
     setInput(result.state);
-    if (result.choices) setPromotionChoices(result.choices);
+    if (result.choices) setChoices(result.choices);
     else if (result.move) submitHumanMove(result.move);
   };
 
-  const canAct = humanTurn && !busy && promotionChoices === null;
+  const canAct = humanTurn && !busy && choices === null;
 
   return {
     session,
     position,
     legal,
     input,
-    promotionChoices,
+    choices,
     thinking,
     checking,
     hint,
@@ -178,19 +176,19 @@ export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessG
     engineError,
     humanTurn,
     faibleHelp,
-    undoAvailable: canUndo(chessAdapter, session) && !busy,
+    undoAvailable: canUndo(adapter, session) && !busy,
     tap: (square) => {
       if (canAct) handleInput(tapSquare(input, square, legal));
     },
     drop: (from, to) => {
       if (canAct) handleInput(dropPiece(from, to, legal));
     },
-    choosePromotion: (move) => {
-      setPromotionChoices(null);
+    choose: (move) => {
+      setChoices(null);
       submitHumanMove(move);
     },
-    cancelPromotion: () => {
-      setPromotionChoices(null);
+    cancelChoice: () => {
+      setChoices(null);
       setInput(EMPTY_INPUT);
     },
     requestHint: () => {
@@ -199,8 +197,8 @@ export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessG
       setChecking(true);
       deps
         .engine()
-        .analyse(pos, HINT_DEPTH)
-        .then((analysis) => setHint({ move: analysis.best, text: hintText(pos, analysis.best) }))
+        .analyse(pos, help.hintDepth)
+        .then((analysis) => setHint({ move: analysis.best, text: help.hintText(pos, analysis.best) }))
         .catch((error: unknown) => setEngineError(engineErrorMessage(error)))
         .finally(() => setChecking(false));
     },
@@ -211,15 +209,15 @@ export function useChessGame(initial: ChessSession, deps: ChessGameDeps): ChessG
     },
     cancelBlunder: () => setBlunder(null),
     undo: () => {
-      if (!canUndo(chessAdapter, session) || busy) return;
-      setSession(undoLastHumanMove(chessAdapter, session));
+      if (!canUndo(adapter, session) || busy) return;
+      setSession(undoLastHumanMove(adapter, session));
       setHint(null);
       setInput(EMPTY_INPUT);
     },
     resignGame: () => {
       // Un coup en cours de vérification serait ensuite joué sur la session d'avant l'abandon et l'effacerait.
       if (checking) return;
-      const loser = session.setup.mode === 'ai' ? session.setup.playerColor : turnOf(position);
+      const loser = session.setup.mode === 'ai' ? session.setup.playerColor : adapter.turn(position);
       setSession(resign(session, loser));
     },
     retryEngine: () => {

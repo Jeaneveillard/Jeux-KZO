@@ -15,7 +15,7 @@ export function HomeScreen({ onNavigate, storageAvailable }: HomeScreenProps) {
           Ton navigateur ne permet pas d'enregistrer : ta progression et tes parties ne seront pas sauvegardées.
         </p>
       )}
-      <button type="button" class="btn" onClick={() => onNavigate({ name: 'chess-menu' })}>
+      <button type="button" class="btn" onClick={() => onNavigate({ name: 'menu', game: 'chess' })}>
         ♞ Échecs
         <span class="sub">Apprendre et jouer</span>
       </button>

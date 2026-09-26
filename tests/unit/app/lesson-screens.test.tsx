@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/preact';
 import { describe, expect, it, vi } from 'vitest';
+import { chessKit } from '../../../src/app/games/chess';
 import { LessonListScreen } from '../../../src/app/screens/LessonListScreen';
 import { LessonScreen } from '../../../src/app/screens/LessonScreen';
 import { CHESS_LESSONS, findChessLesson } from '../../../src/chess/lessons';
@@ -32,7 +33,7 @@ describe('écran de leçon', () => {
     const lesson = findChessLesson('plateau');
     if (!lesson) throw new Error('leçon manquante');
     const { container } = render(
-      <LessonScreen lesson={lesson} nextLesson={findChessLesson('tour')} sound={false} onComplete={onComplete} onOpen={vi.fn()} onBack={vi.fn()} />,
+      <LessonScreen kit={chessKit} lesson={lesson} nextLesson={findChessLesson('tour')} sound={false} onComplete={onComplete} onOpen={vi.fn()} onBack={vi.fn()} />,
     );
     expect(screen.getByText(/L'échiquier a 64 cases/)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Commencer' }));
@@ -50,7 +51,7 @@ describe('écran de leçon', () => {
   it('explique un mauvais coup puis permet de recommencer', () => {
     const lesson = findChessLesson('pion');
     if (!lesson) throw new Error('leçon manquante');
-    const { container } = render(<LessonScreen lesson={lesson} sound={false} onComplete={vi.fn()} onOpen={vi.fn()} onBack={vi.fn()} />);
+    const { container } = render(<LessonScreen kit={chessKit} lesson={lesson} sound={false} onComplete={vi.fn()} onOpen={vi.fn()} onBack={vi.fn()} />);
     fireEvent.click(screen.getByRole('button', { name: 'Commencer' }));
     tapSquare(container, 'e2');
     tapSquare(container, 'e4');

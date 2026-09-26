@@ -1,7 +1,8 @@
 import { act, renderHook } from '@testing-library/preact';
 import { describe, expect, it, vi } from 'vitest';
 import { createSession, type GameSetup } from '../../../../src/app/game/session';
-import { useChessGame } from '../../../../src/app/game/useChessGame';
+import { useGame } from '../../../../src/app/game/useGame';
+import { chessKit } from '../../../../src/app/games/chess';
 import { createStorage } from '../../../../src/app/storage';
 import { chessAdapter } from '../../../../src/chess/adapter';
 import type { ChessMove, ChessPos } from '../../../../src/chess/types';
@@ -30,7 +31,7 @@ function fakeEngine() {
 function setup(level: GameSetup['level']) {
   const { engine, releaseAll } = fakeEngine();
   const initial = createSession(chessAdapter, { game: 'chess', mode: 'ai', level, playerColor: 'white' }, chessAdapter.initial());
-  const hook = renderHook(() => useChessGame(initial, { engine: () => engine, storage: createStorage(null), sound: false }));
+  const hook = renderHook(() => useGame(initial, chessKit, { engine: () => engine, storage: createStorage(null), sound: false }));
   const playE4 = () => {
     act(() => hook.result.current.tap('e2'));
     act(() => hook.result.current.tap('e4'));
@@ -38,7 +39,7 @@ function setup(level: GameSetup['level']) {
   return { hook, playE4, releaseAll };
 }
 
-describe('useChessGame', () => {
+describe('useGame', () => {
   it('ignore l’abandon pendant la vérification du coup, puis joue le coup', async () => {
     const { hook, playE4, releaseAll } = setup('faible');
     playE4();

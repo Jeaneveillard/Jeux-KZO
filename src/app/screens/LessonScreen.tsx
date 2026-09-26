@@ -1,16 +1,13 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { Board } from '../../board/Board';
-import { chessGeometry } from '../../board/geometry';
-import { targetsOf } from '../../board/move-input';
-import { checkedKingSquare, turnOf } from '../../chess/adapter';
-import { getChessEngine } from '../../chess/engine';
-import { chessBoardPieces } from '../../chess/view';
+import { targetsOf, type MoveShape } from '../../board/move-input';
 import type { Exercise, Lesson } from '../../lessons/types';
-import { PromotionPicker } from '../components/PromotionPicker';
+import type { GameKit } from '../games/kit';
 import { playSound } from '../sound';
 import { useLessonExercise } from './useLessonExercise';
 
-interface LessonScreenProps {
+interface LessonScreenProps<Pos, Move extends MoveShape> {
+  readonly kit: GameKit<Pos, Move>;
   readonly lesson: Lesson;
   readonly nextLesson?: Lesson;
   readonly sound: boolean;
@@ -19,7 +16,8 @@ interface LessonScreenProps {
   readonly onBack: () => void;
 }
 
-interface ExerciseViewProps {
+interface ExerciseViewProps<Pos, Move extends MoveShape> {
+  readonly kit: GameKit<Pos, Move>;
   readonly exercise: Exercise;
   readonly index: number;
   readonly total: number;
@@ -27,11 +25,12 @@ interface ExerciseViewProps {
   readonly onNext: () => void;
 }
 
-function ExerciseView({ exercise, index, total, sound, onNext }: ExerciseViewProps) {
-  const ex = useLessonExercise(exercise, getChessEngine);
-  const geometry = useMemo(() => chessGeometry(ex.run.player), [ex.run.player]);
+function ExerciseView<Pos, Move extends MoveShape>({ kit, exercise, index, total, sound, onNext }: ExerciseViewProps<Pos, Move>) {
+  const ex = useLessonExercise(kit.lessonRules, exercise, kit.engine);
+  const geometry = useMemo(() => kit.geometry(ex.run.player), [kit, ex.run.player]);
   const solved = ex.run.status === 'success';
   const failed = ex.run.status === 'failed';
+  const ChoicePicker = kit.ChoicePicker;
 
   useEffect(() => {
     if (solved) playSound('end', sound);
@@ -46,11 +45,11 @@ function ExerciseView({ exercise, index, total, sound, onNext }: ExerciseViewPro
       <div class="board-wrap">
         <Board
           geometry={geometry}
-          pieces={chessBoardPieces(ex.run.pos)}
+          pieces={kit.boardPieces(ex.run.pos)}
           selected={ex.input.selected}
           targets={targetsOf(ex.input.selected, ex.legal)}
           highlights={ex.last ? [ex.last.from, ex.last.to] : []}
-          check={checkedKingSquare(ex.run.pos)}
+          check={kit.checkSquare(ex.run.pos)}
           stars={ex.run.remainingStars}
           onSquareTap={ex.tap}
           onDrop={ex.drop}
@@ -83,12 +82,14 @@ function ExerciseView({ exercise, index, total, sound, onNext }: ExerciseViewPro
           </button>
         )}
       </div>
-      {ex.choices && <PromotionPicker color={turnOf(ex.run.pos)} choices={ex.choices} onPick={ex.choose} onCancel={ex.cancelChoice} />}
+      {ex.choices && (
+        <ChoicePicker color={kit.lessonRules.turn(ex.run.pos)} choices={ex.choices} onPick={ex.choose} onCancel={ex.cancelChoice} />
+      )}
     </>
   );
 }
 
-export function LessonScreen({ lesson, nextLesson, sound, onComplete, onOpen, onBack }: LessonScreenProps) {
+export function LessonScreen<Pos, Move extends MoveShape>({ kit, lesson, nextLesson, sound, onComplete, onOpen, onBack }: LessonScreenProps<Pos, Move>) {
   const [step, setStep] = useState(-1);
   const total = lesson.exercises.length;
 
@@ -139,6 +140,7 @@ export function LessonScreen({ lesson, nextLesson, sound, onComplete, onOpen, on
       {header}
       <ExerciseView
         key={step}
+        kit={kit}
         exercise={lesson.exercises[step]}
         index={step}
         total={total}

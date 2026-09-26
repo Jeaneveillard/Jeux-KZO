@@ -1,36 +1,38 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import { EMPTY_INPUT, dropPiece, tapSquare, type InputResult, type InputState } from '../../board/move-input';
+import { EMPTY_INPUT, dropPiece, tapSquare, type InputResult, type InputState, type MoveShape } from '../../board/move-input';
 import { engineErrorMessage } from '../../core/engine-errors';
-import { chessLessonRules } from '../../chess/lesson-rules';
-import type { ChessMove, ChessPos } from '../../chess/types';
 import type { Engine } from '../../core/types';
 import { playOpponentMove, playPlayerMove, startExercise, type ExerciseRun } from '../../lessons/runner';
-import type { Exercise } from '../../lessons/types';
+import type { Exercise, LessonRules } from '../../lessons/types';
 
-export interface LessonExercise {
-  readonly run: ExerciseRun<ChessPos>;
+export interface LessonExercise<Pos, Move> {
+  readonly run: ExerciseRun<Pos>;
   readonly input: InputState;
-  readonly choices: readonly ChessMove[] | null;
-  readonly last: ChessMove | null;
-  readonly legal: readonly ChessMove[];
+  readonly choices: readonly Move[] | null;
+  readonly last: Move | null;
+  readonly legal: readonly Move[];
   readonly thinking: boolean;
   readonly engineError: string | null;
   tap(square: string): void;
   drop(from: string, to: string): void;
-  choose(move: ChessMove): void;
+  choose(move: Move): void;
   cancelChoice(): void;
   restart(): void;
   retryEngine(): void;
 }
 
-export function useLessonExercise(exercise: Exercise, engine: () => Engine<ChessPos, ChessMove>): LessonExercise {
-  const [run, setRun] = useState(() => startExercise(chessLessonRules, exercise));
+export function useLessonExercise<Pos, Move extends MoveShape>(
+  rules: LessonRules<Pos, Move>,
+  exercise: Exercise,
+  engine: () => Engine<Pos, Move>,
+): LessonExercise<Pos, Move> {
+  const [run, setRun] = useState(() => startExercise(rules, exercise));
   const [input, setInput] = useState<InputState>(EMPTY_INPUT);
-  const [choices, setChoices] = useState<readonly ChessMove[] | null>(null);
-  const [last, setLast] = useState<ChessMove | null>(null);
+  const [choices, setChoices] = useState<readonly Move[] | null>(null);
+  const [last, setLast] = useState<Move | null>(null);
   const [engineError, setEngineError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
-  const legal = useMemo(() => (run.status === 'playing' ? chessLessonRules.legalMoves(run.pos) : []), [run]);
+  const legal = useMemo(() => (run.status === 'playing' ? rules.legalMoves(run.pos) : []), [run]);
 
   // Fin de partie contre l'ordinateur : il répond quand c'est son tour.
   useEffect(() => {
@@ -41,7 +43,7 @@ export function useLessonExercise(exercise: Exercise, engine: () => Engine<Chess
       .then((move) => {
         if (controller.signal.aborted) return;
         setLast(move);
-        setRun(playOpponentMove(chessLessonRules, run, move));
+        setRun(playOpponentMove(rules, run, move));
       })
       .catch((error: unknown) => {
         if (!controller.signal.aborted) setEngineError(engineErrorMessage(error));
@@ -49,15 +51,15 @@ export function useLessonExercise(exercise: Exercise, engine: () => Engine<Chess
     return () => controller.abort();
   }, [run, attempt]);
 
-  const submit = (move: ChessMove) => {
+  const submit = (move: Move) => {
     setInput(EMPTY_INPUT);
     setChoices(null);
-    const next = playPlayerMove(chessLessonRules, run, move);
+    const next = playPlayerMove(rules, run, move);
     setLast(next.pos === next.start ? null : move);
     setRun(next);
   };
 
-  const handle = (result: InputResult<ChessMove>) => {
+  const handle = (result: InputResult<Move>) => {
     setInput(result.state);
     if (result.choices) setChoices(result.choices);
     else if (result.move) submit(result.move);
@@ -85,7 +87,7 @@ export function useLessonExercise(exercise: Exercise, engine: () => Engine<Chess
       setInput(EMPTY_INPUT);
     },
     restart: () => {
-      setRun(startExercise(chessLessonRules, exercise));
+      setRun(startExercise(rules, exercise));
       setInput(EMPTY_INPUT);
       setChoices(null);
       setLast(null);

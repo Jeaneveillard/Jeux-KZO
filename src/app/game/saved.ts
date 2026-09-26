@@ -1,8 +1,6 @@
-import { chessAdapter, chessMoveCodec } from '../../chess/adapter';
-import type { ChessMove, ChessPos } from '../../chess/types';
 import type { GameAdapter, GameId } from '../../core/types';
 import { logWarning } from '../log';
-import { STORAGE_KEYS, type AppStorage } from '../storage';
+import type { AppStorage } from '../storage';
 import { restoreSession, validateRecord, type MoveCodec } from './record';
 import type { Session } from './session';
 
@@ -39,13 +37,3 @@ export function hasSavedGame<Pos, Move>(spec: SavedGameSpec<Pos, Move>, storage:
   const record = validateRecord(storage.read(spec.savedGameKey, (value) => value));
   return record !== null && record.setup.game === spec.id;
 }
-
-// Provisoire : remplacé par les kits de jeu à la tâche 2.
-const CHESS_SAVED_GAME: SavedGameSpec<ChessPos, ChessMove> = {
-  id: 'chess',
-  adapter: chessAdapter,
-  codec: chessMoveCodec,
-  savedGameKey: STORAGE_KEYS.chessSavedGame,
-};
-export const loadSavedChessGame = (storage: AppStorage) => loadSavedGame(CHESS_SAVED_GAME, storage);
-export const hasSavedChessGame = (storage: AppStorage) => hasSavedGame(CHESS_SAVED_GAME, storage);
