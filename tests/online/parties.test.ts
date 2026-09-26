@@ -19,6 +19,13 @@ async function call(client: SupabaseClient, fn: string, args: Row): Promise<Row>
   return data as Row;
 }
 
+/** `rejoindre_partie` renvoie une liste : la partie rejointe, ou rien si le code est inconnu. */
+async function join(client: SupabaseClient, code: unknown, pseudo: string): Promise<Row[]> {
+  const { data, error } = await client.rpc('rejoindre_partie', { p_code: code, p_pseudo: pseudo });
+  if (error) throw new Error(error.message);
+  return data as Row[];
+}
+
 async function failure(client: SupabaseClient, fn: string, args: Row): Promise<string> {
   const { error } = await client.rpc(fn, args);
   return error?.message ?? 'aucune erreur';
@@ -35,18 +42,19 @@ describe('parties en ligne (vrai serveur)', () => {
 
   async function started(jeu = 'chess'): Promise<Row> {
     const created = await call(alice.client, 'creer_partie', { p_jeu: jeu, p_couleur: 'white', p_pseudo: 'Alice' });
-    return call(bob.client, 'rejoindre_partie', { p_code: created.code, p_pseudo: 'Bob' });
+    const [joined] = await join(bob.client, created.code, 'Bob');
+    return joined;
   }
 
   it('crée et rejoint une partie par son code', async () => {
     const created = await call(alice.client, 'creer_partie', { p_jeu: 'chess', p_couleur: 'white', p_pseudo: '  Alice ' });
     expect(created).toMatchObject({ statut: 'attente', pseudo_blancs: 'Alice', blancs: alice.id, noirs: null, coups: [] });
     expect(String(created.code)).toMatch(/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/);
-    const joined = await call(bob.client, 'rejoindre_partie', { p_code: ` ${String(created.code).toLowerCase()} `, p_pseudo: 'Bob' });
+    const [joined] = await join(bob.client, ` ${String(created.code).toLowerCase()} `, 'Bob');
     expect(joined).toMatchObject({ id: created.id, statut: 'en_cours', noirs: bob.id, pseudo_noirs: 'Bob' });
-    expect(await call(bob.client, 'rejoindre_partie', { p_code: created.code, p_pseudo: 'Bob' })).toMatchObject({ id: created.id });
+    expect(await join(bob.client, created.code, 'Bob')).toMatchObject([{ id: created.id }]);
     expect(await failure(eve.client, 'rejoindre_partie', { p_code: created.code, p_pseudo: 'Eve' })).toBe('partie_complete');
-    expect(await failure(eve.client, 'rejoindre_partie', { p_code: 'ZZZZZZ', p_pseudo: 'Eve' })).toBe('code_inconnu');
+    expect(await join(eve.client, 'ZZZZZZ', 'Eve')).toEqual([]);
   });
 
   it('arbitre les coups : tour, ordre et format', async () => {
@@ -101,10 +109,18 @@ describe('parties en ligne (vrai serveur)', () => {
     const waiting = await call(alice.client, 'creer_partie', { p_jeu: 'draughts', p_couleur: 'black', p_pseudo: 'Alice' });
     expect(await failure(alice.client, 'abandonner', { p_partie: waiting.id })).toBe('adversaire_absent');
     await call(alice.client, 'annuler_partie', { p_partie: waiting.id });
-    expect(await failure(bob.client, 'rejoindre_partie', { p_code: waiting.code, p_pseudo: 'Bob' })).toBe('code_inconnu');
+    expect(await join(bob.client, waiting.code, 'Bob')).toEqual([]);
     expect(await failure(alice.client, 'annuler_partie', { p_partie: game.id })).toBe('partie_commencee');
     expect(await failure(alice.client, 'creer_partie', { p_jeu: 'chess', p_couleur: 'white', p_pseudo: '   ' })).toBe('entree_invalide');
     expect(await failure(alice.client, 'creer_partie', { p_jeu: 'chess', p_couleur: 'white', p_pseudo: 'x'.repeat(21) })).toBe('entree_invalide');
     expect(await failure(alice.client, 'creer_partie', { p_jeu: 'go', p_couleur: 'white', p_pseudo: 'Alice' })).toBe('entree_invalide');
+  });
+
+  it('limite les essais de codes inconnus', async () => {
+    const guesser = await player();
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      expect(await join(guesser.client, 'ZZZZZZ', 'Mallory')).toEqual([]);
+    }
+    expect(await failure(guesser.client, 'rejoindre_partie', { p_code: 'ZZZZZZ', p_pseudo: 'Mallory' })).toBe('trop_d_essais');
   });
 });

@@ -7,7 +7,7 @@ import { onlineGame, row } from './fixtures';
 function fakeBackend(rpcResult: unknown = row()) {
   const backend: Backend = {
     userId: vi.fn(async () => 'moi'),
-    rpc: vi.fn(async () => rpcResult),
+    rpc: vi.fn(async (fn: string) => (fn === 'rejoindre_partie' ? [rpcResult] : rpcResult)),
     listGames: vi.fn(async () => [row(), row({ code: 'ABCDEF' })]),
     findGame: vi.fn(async (code: string) => (code === 'K7M2QX' ? row() : null)),
     watch: vi.fn(() => () => undefined),
@@ -37,6 +37,15 @@ describe('API du jeu en ligne', () => {
       ['annuler_partie', { p_partie: 'p1' }],
       ['lancer_revanche', { p_partie: 'p1' }],
     ]);
+  });
+
+  it('traduit une arrivée sans ligne en code inconnu', async () => {
+    const backend = fakeBackend();
+    vi.mocked(backend.rpc).mockResolvedValueOnce([]);
+    await expect(createOnlineApi(backend).joinGame('ZZZZZZ', 'Bob')).rejects.toMatchObject({ code: 'code_inconnu' });
+    vi.mocked(backend.rpc).mockResolvedValueOnce(row());
+    await expect(createOnlineApi(backend).joinGame('K7M2QX', 'Bob')).rejects.toMatchObject({ code: 'reponse_invalide' });
+    await expect(createOnlineApi(backend).joinGame('K7M2QX', 'Bob')).resolves.toEqual(onlineGame());
   });
 
   it('vérifie les réponses du serveur', async () => {

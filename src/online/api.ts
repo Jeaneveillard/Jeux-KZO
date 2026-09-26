@@ -31,7 +31,14 @@ export function createOnlineApi(backend: Backend): OnlineApi {
   return {
     userId: () => backend.userId(),
     createGame: (game, color, pseudo) => call('creer_partie', { p_jeu: game, p_couleur: color, p_pseudo: pseudo }),
-    joinGame: (code, pseudo) => call('rejoindre_partie', { p_code: code, p_pseudo: pseudo }),
+    // Code inconnu : aucune ligne (le serveur compte l'essai au lieu de lever une erreur).
+    joinGame: async (code, pseudo) => {
+      const rows = await backend.rpc('rejoindre_partie', { p_code: code, p_pseudo: pseudo });
+      if (!Array.isArray(rows)) throw new OnlineError('reponse_invalide');
+      const [first]: readonly unknown[] = rows;
+      if (first === undefined) throw new OnlineError('code_inconnu');
+      return toGame(first);
+    },
     playMove: (game, move, result) => call('jouer_coup', { p_partie: game.id, p_numero: game.moves.length, p_coup: move, p_resultat: result }),
     offerDraw: (gameId) => call('proposer_nulle', { p_partie: gameId }),
     answerDraw: (gameId, accept) => call('repondre_nulle', { p_partie: gameId, p_accepte: accept }),
