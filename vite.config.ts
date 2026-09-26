@@ -48,6 +48,8 @@ export default defineConfig({
         'src/app/game/useGame.ts',
         'src/chess/engine/transport.ts',
         'src/chess/engine/index.ts',
+        'src/draughts/engine/worker.ts',
+        'src/draughts/engine/index.ts',
       ],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
