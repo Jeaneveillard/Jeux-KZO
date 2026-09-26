@@ -50,9 +50,17 @@ describe('menu d’un jeu', () => {
 describe('réglages', () => {
   it('active ou coupe le son', () => {
     const onChange = vi.fn();
-    render(<SettingsScreen settings={{ sound: true }} onChange={onChange} onBack={vi.fn()} />);
+    render(<SettingsScreen settings={{ sound: true, pseudo: null }} onChange={onChange} onBack={vi.fn()} />);
     fireEvent.click(screen.getByRole('checkbox', { name: 'Sons' }));
-    expect(onChange).toHaveBeenCalledWith({ sound: false });
+    expect(onChange).toHaveBeenCalledWith({ sound: false, pseudo: null });
     expect(screen.getByText(/Stockfish/)).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Code source sur GitHub' }).getAttribute('href')).toBe('https://github.com/Jeaneveillard/Jeux-KZO');
+  });
+
+  it('change le pseudo du jeu en ligne', () => {
+    const onChange = vi.fn();
+    render(<SettingsScreen settings={{ sound: true, pseudo: 'Ancien' }} onChange={onChange} onBack={vi.fn()} />);
+    fireEvent.change(screen.getByLabelText('Pseudo pour le jeu en ligne'), { target: { value: '  Marie ' } });
+    expect(onChange).toHaveBeenCalledWith({ sound: true, pseudo: 'Marie' });
   });
 });

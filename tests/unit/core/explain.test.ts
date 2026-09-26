@@ -31,4 +31,11 @@ describe('texte de fin de partie commun', () => {
     expect(explainWith(texts, { kind: 'draw', reason: 'king-moves' }, null).detail).toBe('Personne ne gagne.');
     expect(explainWith(texts, { kind: 'ongoing' }, null)).toEqual({ title: 'Partie en cours', detail: '' });
   });
+
+  it('explique la nulle d’un commun accord pour tous les jeux', () => {
+    expect(explainWith(texts, { kind: 'draw', reason: 'agreement' }, 'white')).toEqual({
+      title: 'Partie nulle',
+      detail: "Les deux joueurs se sont mis d'accord : personne ne gagne.",
+    });
+  });
 });

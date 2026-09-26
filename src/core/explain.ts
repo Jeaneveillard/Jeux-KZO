@@ -15,6 +15,10 @@ export interface ResultTexts {
 }
 
 const DEFAULT_DRAW_DETAIL = 'Personne ne gagne.';
+/** Nulles communes à tous les jeux. */
+const COMMON_DRAW_DETAILS: Readonly<Partial<Record<DrawReason, string>>> = {
+  agreement: "Les deux joueurs se sont mis d'accord : personne ne gagne.",
+};
 
 export function sideName(color: Color): string {
   return color === 'white' ? 'les Blancs' : 'les Noirs';
@@ -32,7 +36,9 @@ function resignDetail(view: ResultView, loserSide: string): string {
 /** `viewer` : couleur du joueur contre l'ordinateur, ou null en mode 2 joueurs. */
 export function explainWith(texts: ResultTexts, status: GameStatus, viewer: Color | null): ResultText {
   if (status.kind === 'ongoing') return { title: 'Partie en cours', detail: '' };
-  if (status.kind === 'draw') return { title: 'Partie nulle', detail: texts.draws[status.reason] ?? DEFAULT_DRAW_DETAIL };
+  if (status.kind === 'draw') {
+    return { title: 'Partie nulle', detail: texts.draws[status.reason] ?? COMMON_DRAW_DETAILS[status.reason] ?? DEFAULT_DRAW_DETAIL };
+  }
   const view: ResultView = viewer === null ? 'neutral' : viewer === status.winner ? 'winner' : 'loser';
   const loserSide = capitalize(sideName(opposite(status.winner)));
   const title = view === 'neutral' ? `${capitalize(sideName(status.winner))} gagnent !` : view === 'winner' ? 'Victoire !' : 'Défaite';

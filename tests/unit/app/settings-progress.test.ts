@@ -1,16 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_PROGRESS, isCompleted, markCompleted, validateProgress } from '../../../src/app/progress';
-import { DEFAULT_SETTINGS, validateSettings } from '../../../src/app/settings';
+import { DEFAULT_SETTINGS, cleanPseudo, validateSettings } from '../../../src/app/settings';
 
 describe('réglages', () => {
-  it('active le son par défaut', () => {
-    expect(DEFAULT_SETTINGS).toEqual({ sound: true });
+  it('active le son par défaut, sans pseudo', () => {
+    expect(DEFAULT_SETTINGS).toEqual({ sound: true, pseudo: null });
   });
 
-  it('valide les réglages enregistrés', () => {
-    expect(validateSettings({ sound: false })).toEqual({ sound: false });
+  it('valide les réglages enregistrés, même anciens (sans pseudo)', () => {
+    expect(validateSettings({ sound: false })).toEqual({ sound: false, pseudo: null });
+    expect(validateSettings({ sound: true, pseudo: '  Marie ' })).toEqual({ sound: true, pseudo: 'Marie' });
+    expect(validateSettings({ sound: true, pseudo: 'x'.repeat(21) })).toEqual({ sound: true, pseudo: null });
     expect(validateSettings({ sound: 'oui' })).toBeNull();
     expect(validateSettings(null)).toBeNull();
+  });
+
+  it('nettoie un pseudo', () => {
+    expect(cleanPseudo(' Bob ')).toBe('Bob');
+    expect(cleanPseudo('   ')).toBeNull();
+    expect(cleanPseudo('x'.repeat(20))).toHaveLength(20);
+    expect(cleanPseudo(42)).toBeNull();
   });
 });
 
