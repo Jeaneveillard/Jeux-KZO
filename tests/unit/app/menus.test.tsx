@@ -5,13 +5,16 @@ import { HomeScreen } from '../../../src/app/screens/HomeScreen';
 import { SettingsScreen } from '../../../src/app/screens/SettingsScreen';
 
 describe('accueil', () => {
-  it('ouvre les échecs et annonce les dames pour bientôt', () => {
+  it('ouvre les échecs et les dames', () => {
     const onNavigate = vi.fn();
     render(<HomeScreen onNavigate={onNavigate} storageAvailable={false} />);
     expect(screen.getByText(/ne seront pas sauvegardées/)).toBeTruthy();
-    expect((screen.getByRole('button', { name: /Dames/ }) as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: /Échecs/ }));
-    expect(onNavigate).toHaveBeenCalledWith({ name: 'menu', game: 'chess' });
+    fireEvent.click(screen.getByRole('button', { name: /Dames/ }));
+    expect(onNavigate.mock.calls.map(([route]) => route)).toEqual([
+      { name: 'menu', game: 'chess' },
+      { name: 'menu', game: 'draughts' },
+    ]);
   });
 });
 

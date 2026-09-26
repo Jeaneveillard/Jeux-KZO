@@ -19,9 +19,9 @@ export function HomeScreen({ onNavigate, storageAvailable }: HomeScreenProps) {
         ♞ Échecs
         <span class="sub">Apprendre et jouer</span>
       </button>
-      <button type="button" class="btn" disabled>
+      <button type="button" class="btn" onClick={() => onNavigate({ name: 'menu', game: 'draughts' })}>
         ⛂ Dames
-        <span class="sub">Bientôt disponible</span>
+        <span class="sub">Apprendre et jouer</span>
       </button>
       <button type="button" class="btn" onClick={() => onNavigate({ name: 'settings' })}>
         ⚙ Réglages
