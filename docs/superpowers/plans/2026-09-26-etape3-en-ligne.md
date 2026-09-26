@@ -3629,10 +3629,10 @@ export default defineConfig({
 
 - [ ] **Step 2 : Vérifier le build publié sous `/Jeux-KZO/`**
 
-Run (Bash) : `BASE_PATH=/Jeux-KZO/ npm run build && grep -o '"start_url":"[^"]*"' dist/manifest.webmanifest && grep -o 'href="/Jeux-KZO/[^"]*"' dist/index.html | head -3`
+Run (Bash ; sous Git Bash pour Windows, préfixer `MSYS_NO_PATHCONV=1` pour que `/Jeux-KZO/` ne soit pas converti en chemin disque) : `BASE_PATH=/Jeux-KZO/ npm run build && grep -o '"start_url":"[^"]*"' dist/manifest.webmanifest && grep -o 'href="/Jeux-KZO/[^"]*"' dist/index.html | head -3`
 Expected : `"start_url":"/Jeux-KZO/"`, et les liens de `index.html` commencent par `/Jeux-KZO/`.
 
-Puis servir ce build : `npx vite preview --base /Jeux-KZO/ --port 4175 --strictPort` (en arrière-plan) et ouvrir `http://localhost:4175/Jeux-KZO/` dans le navigateur intégré : l'accueil s'affiche, une partie contre l'ordinateur au niveau Moyen répond à `e2e4` (Stockfish trouvé sous la base), la console ne montre pas d'erreur 404. Arrêter le serveur, puis `npm run build` pour remettre un build standard.
+Puis servir ce build : `BASE_PATH=/Jeux-KZO/ npx vite preview --port 4175 --strictPort` (en arrière-plan) et ouvrir `http://localhost:4175/Jeux-KZO/` dans le navigateur intégré : l'accueil s'affiche, une partie contre l'ordinateur au niveau Moyen répond à `e2e4` (Stockfish trouvé sous la base), la console ne montre pas d'erreur 404. Arrêter le serveur, puis `npm run build` pour remettre un build standard.
 
 - [ ] **Step 3 : Écrire le flux GitHub Actions**
 
