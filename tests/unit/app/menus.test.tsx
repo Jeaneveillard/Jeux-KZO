@@ -45,14 +45,29 @@ describe('menu d’un jeu', () => {
       { name: 'play', setup: { game: 'draughts', mode: 'local', level: null, playerColor: 'white' } },
     ]);
   });
+
+  it('ouvre le jeu en ligne', () => {
+    const onNavigate = vi.fn();
+    render(<GameMenuScreen game="draughts" title="Dames" onNavigate={onNavigate} hasSavedGame={false} completedCount={0} totalLessons={12} notice={null} />);
+    fireEvent.click(screen.getByRole('button', { name: /En ligne/ }));
+    expect(onNavigate).toHaveBeenCalledWith({ name: 'online', game: 'draughts' });
+  });
 });
 
 describe('réglages', () => {
   it('active ou coupe le son', () => {
     const onChange = vi.fn();
-    render(<SettingsScreen settings={{ sound: true }} onChange={onChange} onBack={vi.fn()} />);
+    render(<SettingsScreen settings={{ sound: true, pseudo: null }} onChange={onChange} onBack={vi.fn()} />);
     fireEvent.click(screen.getByRole('checkbox', { name: 'Sons' }));
-    expect(onChange).toHaveBeenCalledWith({ sound: false });
+    expect(onChange).toHaveBeenCalledWith({ sound: false, pseudo: null });
     expect(screen.getByText(/Stockfish/)).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Code source sur GitHub' }).getAttribute('href')).toBe('https://github.com/Jeaneveillard/Jeux-KZO');
+  });
+
+  it('change le pseudo du jeu en ligne', () => {
+    const onChange = vi.fn();
+    render(<SettingsScreen settings={{ sound: true, pseudo: 'Ancien' }} onChange={onChange} onBack={vi.fn()} />);
+    fireEvent.change(screen.getByLabelText('Pseudo pour le jeu en ligne'), { target: { value: '  Marie ' } });
+    expect(onChange).toHaveBeenCalledWith({ sound: true, pseudo: 'Marie' });
   });
 });

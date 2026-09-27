@@ -1,6 +1,7 @@
 import { opposite, type Color, type GameAdapter, type GameId, type GameStatus, type Level } from '../../core/types';
 
-export type GameMode = 'ai' | 'local';
+/** `online` : partie en ligne (jamais sauvegardée localement, arbitrée par le serveur). */
+export type GameMode = 'ai' | 'local' | 'online';
 
 export interface GameSetup {
   readonly game: GameId;

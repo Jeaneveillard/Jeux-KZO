@@ -1,10 +1,15 @@
-import { useMemo, useState } from 'preact/hooks';
+import { useMemo, useRef, useState } from 'preact/hooks';
 import type { MoveShape } from '../board/move-input';
 import type { GameId } from '../core/types';
 import { hasSavedGame } from './game/saved';
 import { withKit } from './games';
 import type { GameKit } from './games/kit';
-import { navigate, useRoute } from './navigation';
+import { navigate, redirect, useRoute } from './navigation';
+import { JoinScreen } from './online/JoinScreen';
+import { ConnectionNotice, OnlineFrame } from './online/OnlineFrame';
+import { OnlineGameScreen } from './online/OnlineGameScreen';
+import { OnlineMenuScreen } from './online/OnlineMenuScreen';
+import { useOnlineApi } from './online/useOnlineApi';
 import { EMPTY_PROGRESS, isCompleted, markCompleted, validateProgress, type LessonProgress } from './progress';
 import type { Route } from './router';
 import { GameMenuScreen } from './screens/GameMenuScreen';
@@ -16,7 +21,9 @@ import { SettingsScreen } from './screens/SettingsScreen';
 import { DEFAULT_SETTINGS, validateSettings, type Settings } from './settings';
 import { STORAGE_KEYS, createStorage, detectBackend, type AppStorage } from './storage';
 
-type GameRoute = Exclude<Route, { readonly name: 'home' } | { readonly name: 'settings' }>;
+type GameRoute = Exclude<Route, { readonly name: 'home' } | { readonly name: 'settings' } | { readonly name: 'join' }>;
+
+const ONLINE_ROUTES: readonly Route['name'][] = ['online', 'onlineGame', 'join'];
 type ProgressByGame = Readonly<Record<GameId, LessonProgress>>;
 
 function readProgress(storage: AppStorage): ProgressByGame {
@@ -32,6 +39,10 @@ export function App() {
   const [progress, setProgress] = useState<ProgressByGame>(() => readProgress(storage));
   const [menuNotice, setMenuNotice] = useState<string | null>(null);
   const { route, version } = useRoute();
+  // Le client du jeu en ligne n'est chargé qu'au premier écran en ligne, puis gardé.
+  const onlineUsed = useRef(false);
+  if (ONLINE_ROUTES.includes(route.name)) onlineUsed.current = true;
+  const connection = useOnlineApi(onlineUsed.current);
 
   const go = (next: Route) => {
     setMenuNotice(null);
@@ -42,6 +53,8 @@ export function App() {
     setSettings(next);
     storage.write(STORAGE_KEYS.settings, next);
   };
+
+  const setPseudo = (pseudo: string) => updateSettings({ ...settings, pseudo });
 
   const renderGame = <Pos, Move extends MoveShape>(kit: GameKit<Pos, Move>, current: GameRoute) => {
     const done = progress[kit.id];
@@ -101,11 +114,46 @@ export function App() {
             }}
           />
         );
+      case 'online':
+        return (
+          <OnlineMenuScreen game={kit.id} title={kit.title} connection={connection} pseudo={settings.pseudo} onPseudo={setPseudo} onNavigate={go} />
+        );
+      case 'onlineGame':
+        if (!connection.api || !connection.userId) {
+          return (
+            <OnlineFrame title={`${kit.title} en ligne`} backLabel="Retour à mes parties" onBack={() => go({ name: 'online', game: kit.id })}>
+              <ConnectionNotice connection={connection} />
+            </OnlineFrame>
+          );
+        }
+        return (
+          <OnlineGameScreen
+            key={`${current.code}-${version}`}
+            kit={kit}
+            api={connection.api}
+            userId={connection.userId}
+            code={current.code}
+            sound={settings.sound}
+            onNavigate={go}
+          />
+        );
     }
   };
 
   const home = <HomeScreen onNavigate={go} storageAvailable={storage.available} />;
   if (route.name === 'home') return home;
+  if (route.name === 'join') {
+    return (
+      <JoinScreen
+        code={route.code}
+        connection={connection}
+        pseudo={settings.pseudo}
+        onPseudo={setPseudo}
+        onJoined={(joined) => redirect({ name: 'onlineGame', game: joined.game, code: joined.code })}
+        onHome={() => go({ name: 'home' })}
+      />
+    );
+  }
   if (route.name === 'settings') {
     return <SettingsScreen settings={settings} onChange={updateSettings} onBack={() => go({ name: 'home' })} />;
   }

@@ -8,5 +8,6 @@ export const LEVEL_LABELS: Readonly<Record<Level, { readonly name: string; reado
 };
 
 export function modeTitle(setup: GameSetup): string {
+  if (setup.mode === 'online') return 'En ligne';
   return setup.mode === 'ai' && setup.level ? `Contre l'ordinateur · ${LEVEL_LABELS[setup.level].name}` : '2 joueurs';
 }

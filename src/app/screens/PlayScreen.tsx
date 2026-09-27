@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
-import { Board } from '../../board/Board';
-import { targetsOf, type MoveShape } from '../../board/move-input';
-import { opposite } from '../../core/types';
-import { CapturedRow } from '../components/CapturedRow';
+import { useEffect, useState } from 'preact/hooks';
+import type { MoveShape } from '../../board/move-input';
+import { BoardView } from '../components/BoardView';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EndDialog } from '../components/EndDialog';
 import { lastMove, type Session } from '../game/session';
@@ -41,12 +39,9 @@ export function PlayScreen<Pos, Move extends MoveShape>(props: PlayScreenProps<P
   const [confirmResign, setConfirmResign] = useState(false);
   const [endDismissed, setEndDismissed] = useState(false);
   const bottom = session.setup.mode === 'ai' ? session.setup.playerColor : 'white';
-  const geometry = useMemo(() => kit.geometry(bottom), [kit, bottom]);
   const last = lastMove(session);
-  const captured = kit.capturedPieces(position);
   const finished = session.result.kind !== 'ongoing';
   const viewer = session.setup.mode === 'ai' ? session.setup.playerColor : null;
-  const ChoicePicker = kit.ChoicePicker;
 
   useEffect(() => {
     if (!finished) setEndDismissed(false);
@@ -61,23 +56,20 @@ export function PlayScreen<Pos, Move extends MoveShape>(props: PlayScreenProps<P
         <h1>{modeTitle(session.setup)}</h1>
       </header>
       {props.notice && <p class="feedback feedback-info">{props.notice}</p>}
-      <CapturedRow color={bottom} pieces={captured[bottom]} />
-      <div class="board-wrap">
-        <Board
-          geometry={geometry}
-          pieces={kit.boardPieces(position)}
-          selected={game.input.selected}
-          targets={targetsOf(game.input.selected, game.legal)}
-          highlights={last ? [last.from, last.to] : []}
-          check={kit.checkSquare(position)}
-          arrows={game.hint ? [game.hint.move] : []}
-          animate={last}
-          onSquareTap={game.tap}
-          onDrop={game.drop}
-          canDrag={(square) => game.legal.some((move) => move.from === square)}
-        />
-      </div>
-      <CapturedRow color={opposite(bottom)} pieces={captured[opposite(bottom)]} />
+      <BoardView
+        kit={kit}
+        position={position}
+        bottom={bottom}
+        legal={game.legal}
+        input={game.input}
+        last={last}
+        arrow={game.hint?.move ?? null}
+        choices={game.choices}
+        onTap={game.tap}
+        onDrop={game.drop}
+        onChoose={game.choose}
+        onCancelChoice={game.cancelChoice}
+      />
       <p class="status-line" role="status">
         {statusText(kit, game)}
       </p>
@@ -110,9 +102,6 @@ export function PlayScreen<Pos, Move extends MoveShape>(props: PlayScreenProps<P
           Nouvelle partie
         </button>
       </div>
-      {game.choices && (
-        <ChoicePicker color={kit.adapter.turn(position)} choices={game.choices} onPick={game.choose} onCancel={game.cancelChoice} />
-      )}
       {game.blunder && (
         <ConfirmDialog
           title="Attention !"

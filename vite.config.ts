@@ -2,7 +2,11 @@ import preact from '@preact/preset-vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 
+/** `/Jeux-KZO/` pour GitHub Pages (variable BASE_PATH), `/` en local et pour les tests. */
+const base = process.env.BASE_PATH ?? '/';
+
 export default defineConfig({
+  base,
   plugins: [
     preact({ prefreshEnabled: !process.env.VITEST }),
     VitePWA({
@@ -13,7 +17,6 @@ export default defineConfig({
         short_name: 'Échecs & Dames',
         description: "Apprends et joue aux échecs et aux dames contre l'ordinateur.",
         lang: 'fr',
-        start_url: '/',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#f4f1ea',
@@ -46,10 +49,15 @@ export default defineConfig({
         'src/app/screens/**',
         'src/app/components/**',
         'src/app/game/useGame.ts',
+        'src/app/online/useOnlineApi.ts',
+        'src/app/online/useOnlineGame.ts',
+        'src/app/online/*.tsx',
         'src/chess/engine/transport.ts',
         'src/chess/engine/index.ts',
         'src/draughts/engine/worker.ts',
         'src/draughts/engine/index.ts',
+        'src/online/client.ts',
+        'src/online/index.ts',
       ],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },

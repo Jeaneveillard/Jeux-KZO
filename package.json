@@ -13,11 +13,14 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:strength": "vitest run --config vitest.strength.config.ts",
+    "test:online": "vitest run --config vitest.online.config.ts",
     "e2e": "playwright test",
+    "e2e:online": "playwright test --config playwright.online.config.ts",
     "pieces": "node scripts/extract-pieces.mjs",
     "icons": "node scripts/make-icon.mjs && pwa-assets-generator"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
     "chess.js": "1.4.0",
     "preact": "^10.29.8"
   },

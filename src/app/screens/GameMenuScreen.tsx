@@ -75,9 +75,9 @@ export function GameMenuScreen({ game, title, onNavigate, hasSavedGame, complete
         2 joueurs sur ce téléphone
         <span class="sub">Chacun son tour, sur le même écran</span>
       </button>
-      <button type="button" class="btn" disabled>
+      <button type="button" class="btn" onClick={() => onNavigate({ name: 'online', game })}>
         En ligne
-        <span class="sub">Bientôt disponible</span>
+        <span class="sub">Contre un ami, avec un code ou un lien</span>
       </button>
     </section>
   );

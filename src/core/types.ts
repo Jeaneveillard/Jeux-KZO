@@ -8,7 +8,8 @@ export const GAME_IDS: readonly GameId[] = ['chess', 'draughts'];
 export type WinReason = 'checkmate' | 'resign' | 'no-moves';
 /**
  * `king-moves` : 25 coups de suite joués seulement par des dames, sans prise ni pion (dames) ;
- * `endgame-limit` : fin de partie limitée à 16 ou 5 coups (dames).
+ * `endgame-limit` : fin de partie limitée à 16 ou 5 coups (dames) ;
+ * `agreement` : nulle d'un commun accord (jeu en ligne).
  */
 export type DrawReason =
   | 'stalemate'
@@ -16,7 +17,19 @@ export type DrawReason =
   | 'fifty-moves'
   | 'insufficient-material'
   | 'king-moves'
-  | 'endgame-limit';
+  | 'endgame-limit'
+  | 'agreement';
+
+export const WIN_REASONS: readonly WinReason[] = ['checkmate', 'resign', 'no-moves'];
+export const DRAW_REASONS: readonly DrawReason[] = [
+  'stalemate',
+  'repetition',
+  'fifty-moves',
+  'insufficient-material',
+  'king-moves',
+  'endgame-limit',
+  'agreement',
+];
 
 export type GameStatus =
   | { readonly kind: 'ongoing' }

@@ -12,5 +12,6 @@ describe('libellés', () => {
   it('titre l’écran de partie', () => {
     expect(modeTitle({ game: 'chess', mode: 'ai', level: 'expert', playerColor: 'white' })).toBe("Contre l'ordinateur · Expert");
     expect(modeTitle({ game: 'chess', mode: 'local', level: null, playerColor: 'white' })).toBe('2 joueurs');
+    expect(modeTitle({ game: 'chess', mode: 'online', level: null, playerColor: 'black' })).toBe('En ligne');
   });
 });
