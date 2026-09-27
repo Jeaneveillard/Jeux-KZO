@@ -3700,7 +3700,7 @@ git add vite.config.ts .github
 git commit -m "ci: tests sur chaque Pull Request et mise en ligne sur GitHub Pages"
 ```
 
-- [ ] **Step 5 : Pousser et ouvrir la Pull Request**
+- [x] **Step 5 : Pousser et ouvrir la Pull Request**
 
 ```bash
 git push -u origin etape3-en-ligne
@@ -3708,7 +3708,7 @@ gh pr create --base main --head etape3-en-ligne --title "Étape 3 : jeu en ligne
 ```
 Attendre le résultat du flux sur la Pull Request (`gh pr checks`) : le job `build` doit être vert (le job `deploy` est ignoré sur une Pull Request).
 
-- [ ] **Step 6 : Rendre le dépôt public et activer GitHub Pages** (actions sur le compte de l'utilisateur : **demander confirmation d'abord**)
+- [x] **Step 6 : Rendre le dépôt public et activer GitHub Pages** (actions sur le compte de l'utilisateur : **demander confirmation d'abord**)
 
 Avant de demander : rechercher des secrets dans tout l'historique :
 ```bash
@@ -3724,7 +3724,7 @@ gh variable set VITE_SUPABASE_URL --repo Jeaneveillard/Jeux-KZO --body "<URL du 
 gh variable set VITE_SUPABASE_PUBLISHABLE_KEY --repo Jeaneveillard/Jeux-KZO --body "<clé publishable>"
 ```
 
-- [ ] **Step 7 : Fusionner et vérifier le site en ligne**
+- [x] **Step 7 : Fusionner et vérifier le site en ligne**
 
 ```bash
 gh pr merge --squash --delete-branch
@@ -3783,4 +3783,4 @@ Attendre la fin du flux sur `main` (`gh run watch`), puis ouvrir `https://jeanev
   - Sous Git Bash, `MSYS_NO_PATHCONV=1` est nécessaire pour que la base ne soit pas convertie en chemin disque (sans effet sur la CI Linux).
   - Le navigateur intégré de l'app de bureau refuse d'enregistrer un service worker. La vérification a été faite avec Chromium (Playwright) : service worker installé sous `/Jeux-KZO/`, app fonctionnelle hors ligne.
 - **Chargement à la demande** : le morceau séparé `client-*.js` (Supabase) n'apparaît au build qu'une fois les écrans branchés (Tâche 6), et non dès la Tâche 3.
-
+- **Mise en ligne (Tâche 8)** : PR #2 fusionnée, déploiement GitHub Pages réussi. Vérification sur le vrai site avec deux téléphones simulés : service worker sous `/Jeux-KZO/`, réponse de Stockfish, partie en ligne créée puis rejointe par le lien, coup reçu en direct, abandon vu par l'autre joueur, aucune erreur dans la console.
