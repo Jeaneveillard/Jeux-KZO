@@ -78,7 +78,7 @@ Un bloc précédé de **`Fichier : chemin`** donne le contenu **complet** du fic
   - `online/code.ts` : `CODE_ALPHABET`, `CODE_LENGTH = 6`, `normalizeCode(input): string | null`, `inviteLink(base, code): string`.
   - `SettingsScreen` : champ « Pseudo pour le jeu en ligne », lien « Code source sur GitHub ».
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/online/code.test.ts`**
 ```ts
@@ -185,12 +185,12 @@ describe('réglages', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/online tests/unit/core tests/unit/app/settings-progress.test.ts tests/unit/app/menus.test.tsx`
 Expected : FAIL — `src/online/code` introuvable, `cleanPseudo` absent, texte de nulle d'accord et champ pseudo absents.
 
-- [ ] **Step 3 : Écrire le code**
+- [x] **Step 3 : Écrire le code**
 
 **Fichier : `src/online/code.ts`**
 ```ts
@@ -348,12 +348,12 @@ Dans `src/styles/global.css`, après la ligne `.toggle input { width: 24px; heig
 .text-input:focus { outline: none; border-color: var(--primary); }
 ```
 
-- [ ] **Step 4 : Lancer tous les tests et le typage**
+- [x] **Step 4 : Lancer tous les tests et le typage**
 
 Run : `npx vitest run` puis `npx tsc -b`
 Expected : PASS, aucune erreur.
 
-- [ ] **Step 5 : Commit**
+- [x] **Step 5 : Commit**
 
 ```bash
 git add src tests
@@ -378,7 +378,7 @@ git commit -m "feat: socle du jeu en ligne (nulle d'accord, pseudo, codes de par
 
 Le trait se déduit du nombre de coups (les deux jeux commencent par les Blancs) : `turnOf` sert à trier la liste sans rejouer les parties. `buildOnlineView` rejoue les coups reçus avec les règles du jeu ; un coup illégal arrête la reconstruction et marque la partie `invalidMove`.
 
-- [ ] **Step 1 : Écrire les aides de test et les tests qui échouent**
+- [x] **Step 1 : Écrire les aides de test et les tests qui échouent**
 
 **Fichier : `tests/unit/online/fixtures.ts`**
 ```ts
@@ -573,12 +573,12 @@ describe('vue d’une partie en ligne', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/online tests/unit/app/online`
 Expected : FAIL — modules `rows`, `errors`, `view` introuvables.
 
-- [ ] **Step 3 : Écrire les types, erreurs et lignes**
+- [x] **Step 3 : Écrire les types, erreurs et lignes**
 
 **Fichier : `src/online/types.ts`**
 ```ts
@@ -733,7 +733,7 @@ export function parseGameRow(value: unknown): OnlineGame | null {
 }
 ```
 
-- [ ] **Step 4 : Écrire la logique d'affichage**
+- [x] **Step 4 : Écrire la logique d'affichage**
 
 **Fichier : `src/app/online/view.ts`**
 ```ts
@@ -841,12 +841,12 @@ export function listEntries(games: readonly OnlineGame[], userId: string): ListE
 }
 ```
 
-- [ ] **Step 5 : Lancer les tests**
+- [x] **Step 5 : Lancer les tests**
 
 Run : `npx vitest run tests/unit/online tests/unit/app/online` puis `npx tsc -b`
 Expected : PASS (4 + 14 + 3 + 8 tests), aucune erreur.
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add src/online src/app/online tests/unit/online tests/unit/app/online
@@ -873,12 +873,12 @@ git commit -m "feat: données du jeu en ligne (lignes vérifiées, erreurs, vue 
 
 `playMove` envoie `p_numero = game.moves.length` : `game` doit être la **dernière partie confirmée par le serveur**, jamais une copie optimiste.
 
-- [ ] **Step 1 : Installer Supabase**
+- [x] **Step 1 : Installer Supabase**
 
 Run : `npm install @supabase/supabase-js@^2.117.2`
 Expected : dépendance ajoutée à `package.json`, aucune vulnérabilité haute.
 
-- [ ] **Step 2 : Écrire les tests qui échouent**
+- [x] **Step 2 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/online/api.test.ts`**
 ```ts
@@ -964,12 +964,12 @@ describe('configuration du jeu en ligne', () => {
 });
 ```
 
-- [ ] **Step 3 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 3 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/online/api.test.ts tests/unit/online/config.test.ts`
 Expected : FAIL — modules `api` et `config` introuvables.
 
-- [ ] **Step 4 : Écrire l'interface du serveur, l'API et la configuration**
+- [x] **Step 4 : Écrire l'interface du serveur, l'API et la configuration**
 
 **Fichier : `src/online/backend.ts`**
 ```ts
@@ -1065,7 +1065,7 @@ export function readConfig(env: Readonly<Record<string, unknown>>): OnlineConfig
 }
 ```
 
-- [ ] **Step 5 : Écrire le client Supabase et le chargement à la demande**
+- [x] **Step 5 : Écrire le client Supabase et le chargement à la demande**
 
 **Fichier : `src/online/client.ts`**
 ```ts
@@ -1170,12 +1170,12 @@ Dans `vite.config.ts`, dans `coverage.exclude`, ajouter après `'src/draughts/en
         'src/online/index.ts',
 ```
 
-- [ ] **Step 6 : Lancer les tests, le typage et le build**
+- [x] **Step 6 : Lancer les tests, le typage et le build**
 
 Run : `npx vitest run tests/unit/online` puis `npx tsc -b` puis `npm run build`
 Expected : PASS (dont 3 + 2 nouveaux tests), aucune erreur ; le build produit un morceau séparé pour Supabase (`ls dist/assets` montre un fichier `client-*.js` distinct de `index-*.js`).
 
-- [ ] **Step 7 : Commit**
+- [x] **Step 7 : Commit**
 
 ```bash
 git add package.json package-lock.json src/online vite.config.ts tests/unit/online
@@ -1194,7 +1194,7 @@ git commit -m "feat: accès au serveur du jeu en ligne (API vérifiée, client S
 
 Les codes d'erreur levés (`raise exception '<code>'`) sont exactement ceux de `SERVER_ERROR_CODES` (Tâche 2). Le trait se déduit du nombre de coups (les Blancs jouent les coups d'indice pair). Les fonctions internes (`nouveau_code`, `pseudo_propre`, `resultat_valide`, `ma_partie`, `ma_couleur`, `exiger_en_cours`) ne sont pas appelables par l'app.
 
-- [ ] **Step 1 : Écrire la migration**
+- [x] **Step 1 : Écrire la migration**
 
 **Fichier : `supabase/migrations/20260926000000_parties.sql`**
 ```sql
@@ -1561,15 +1561,15 @@ select cron.schedule(
 
 Dans `jouer_coup`, la variable locale s'appelle `fin` (et non `resultat`, nom d'une colonne : PL/pgSQL refuserait la référence ambiguë) ; la valeur JSON `null` envoyée par l'app est traitée comme « pas de résultat ».
 
-- [ ] **Step 2 : Créer le projet Supabase « jeux-kzo »** (action sur le compte de l'utilisateur, annoncée)
+- [x] **Step 2 : Créer le projet Supabase « jeux-kzo »** (action sur le compte de l'utilisateur, annoncée)
 
 Avec les outils Supabase : `get_cost` (type `project`, organisation `xfqkaxvozubmuiqeghjf`) → vérifier **0 $** ; `confirm_cost` ; `create_project` (nom `jeux-kzo`, région `ca-central-1`, organisation `xfqkaxvozubmuiqeghjf`) ; attendre avec `get_project` que le statut soit `ACTIVE_HEALTHY`.
 
-- [ ] **Step 3 : Appliquer la migration et vérifier la sécurité**
+- [x] **Step 3 : Appliquer la migration et vérifier la sécurité**
 
 Avec `apply_migration` (nom `parties`, contenu du fichier du Step 1), puis `list_tables` (schéma `public`) : la table `parties` apparaît avec RLS activé. Puis `get_advisors` (type `security`) : aucun avertissement sur `parties` ni sur les fonctions (les avertissements généraux du projet, s'il y en a, sont notés).
 
-- [ ] **Step 4 : Écrire la configuration locale**
+- [x] **Step 4 : Écrire la configuration locale**
 
 Avec `get_project_url` et `get_publishable_keys`, écrire `.env.local` (ignoré par git grâce à `.env.*`) :
 ```
@@ -1578,14 +1578,14 @@ VITE_SUPABASE_PUBLISHABLE_KEY=<clé publishable>
 ```
 Vérifier : `git check-ignore .env.local` affiche `.env.local`.
 
-- [ ] **Step 5 : Faire activer deux réglages du tableau de bord** (par l'utilisateur)
+- [x] **Step 5 : Faire activer deux réglages du tableau de bord** (par l'utilisateur)
 
 Les outils ne permettent pas de les changer ; demander à l'utilisateur, avec les liens directs :
 1. **Authentication → Sign In / Providers → « Allow anonymous sign-ins »** : activer (`https://supabase.com/dashboard/project/<ref>/auth/providers`).
 2. **Realtime → Settings → « Allow public access »** : désactiver, pour imposer les canaux privés (`https://supabase.com/dashboard/project/<ref>/realtime/settings`).
 Continuer les tâches 5 et 6 en attendant ; les steps 6 à 8 attendent la confirmation.
 
-- [ ] **Step 6 : Écrire les tests contre le vrai serveur**
+- [x] **Step 6 : Écrire les tests contre le vrai serveur**
 
 **Fichier : `vitest.online.config.ts`**
 ```ts
@@ -1722,12 +1722,12 @@ describe('parties en ligne (vrai serveur)', () => {
 });
 ```
 
-- [ ] **Step 7 : Lancer les tests contre le serveur**
+- [x] **Step 7 : Lancer les tests contre le serveur**
 
 Run : `npm run test:online`
 Expected : 5 tests PASS. Si « Connexion anonyme impossible », le réglage du Step 5 n'est pas encore activé.
 
-- [ ] **Step 8 : Commit** (sans `.env.local`)
+- [x] **Step 8 : Commit** (sans `.env.local`)
 
 ```bash
 git add supabase vitest.online.config.ts tests/online package.json tsconfig.node.json
@@ -1754,7 +1754,7 @@ git commit -m "feat: base de données du jeu en ligne (parties, règles d'accès
 
 `useOnlineGame` garde la **partie confirmée** (dernière réponse du serveur) et un **coup en attente** affiché tout de suite ; `playMove` reçoit toujours la partie confirmée. Chaque notification (changement, retour du réseau, retour au premier plan, reconnexion temps réel) relit la partie.
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/board/useMoveInput.test.ts`**
 ```ts
@@ -1987,12 +1987,12 @@ describe('partage du lien', () => {
 });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/board/useMoveInput.test.ts tests/unit/app/online`
 Expected : FAIL — modules `useMoveInput`, `useOnlineGame`, `share` introuvables.
 
-- [ ] **Step 3 : Écrire la saisie et le plateau commun**
+- [x] **Step 3 : Écrire la saisie et le plateau commun**
 
 **Fichier : `src/board/useMoveInput.ts`**
 ```ts
@@ -2129,7 +2129,7 @@ import { BoardView } from '../components/BoardView';
 ```
 - supprimer le bloc `{game.choices && ( <ChoicePicker … /> )}` (désormais dans `BoardView`).
 
-- [ ] **Step 4 : Écrire le partage et les hooks**
+- [x] **Step 4 : Écrire le partage et les hooks**
 
 **Fichier : `src/app/online/share.ts`**
 ```ts
@@ -2418,12 +2418,12 @@ Dans `vite.config.ts`, dans `coverage.exclude`, ajouter après `'src/app/game/us
         'src/app/online/useOnlineGame.ts',
 ```
 
-- [ ] **Step 5 : Lancer tous les tests et le typage**
+- [x] **Step 5 : Lancer tous les tests et le typage**
 
 Run : `npx vitest run` puis `npx tsc -b`
 Expected : PASS (dont 2 + 6 + 3 nouveaux tests ; les tests des écrans de partie existants passent toujours avec `BoardView`), aucune erreur.
 
-- [ ] **Step 6 : Commit**
+- [x] **Step 6 : Commit**
 
 ```bash
 git add src tests vite.config.ts
@@ -2448,7 +2448,7 @@ git commit -m "feat: hooks du jeu en ligne (partie suivie en direct, coups confi
 
 Libellés utilisés par les tests de bout en bout (Tâche 7) : champ « Ton pseudo », boutons « Continuer », « Créer la partie », « Rejoindre », « Rejoindre la partie », « Partager le lien », « Annuler la partie », « Proposer la nulle », « Accepter », « Refuser », « Abandonner », « Revanche », « Jouer la revanche » ; code affiché dans `.invite-code` ; présence : image « Bob est en ligne » / « Bob n'est pas en ligne ».
 
-- [ ] **Step 1 : Écrire les tests qui échouent**
+- [x] **Step 1 : Écrire les tests qui échouent**
 
 **Fichier : `tests/unit/app/online/screens.test.tsx`**
 ```tsx
@@ -2668,12 +2668,12 @@ Dans `tests/unit/app/menus.test.tsx`, ajouter dans `describe('menu d’un jeu', 
   });
 ```
 
-- [ ] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
+- [x] **Step 2 : Lancer les tests pour vérifier qu'ils échouent**
 
 Run : `npx vitest run tests/unit/app`
 Expected : FAIL — écrans en ligne introuvables, routes et libellé « En ligne » absents, bouton « En ligne » désactivé.
 
-- [ ] **Step 3 : Adresses, navigation, libellé, bouton « En ligne » et boîte de fin**
+- [x] **Step 3 : Adresses, navigation, libellé, bouton « En ligne » et boîte de fin**
 
 Dans `src/app/router.ts` :
 - ajouter l'import `import { normalizeCode } from '../online/code';` après `import { GAME_IDS, LEVELS_ORDER, type GameId } from '../core/types';` ;
@@ -2797,7 +2797,7 @@ Dans `vite.config.ts`, dans `coverage.exclude`, ajouter après `'src/app/online/
         'src/app/online/*.tsx',
 ```
 
-- [ ] **Step 4 : Écrire le cadre, le pseudo et l'écran « En ligne »**
+- [x] **Step 4 : Écrire le cadre, le pseudo et l'écran « En ligne »**
 
 **Fichier : `src/app/online/OnlineFrame.tsx`**
 ```tsx
@@ -3032,7 +3032,7 @@ function OnlineMenu({ game, api, userId, pseudo, onNavigate }: OnlineMenuProps) 
 }
 ```
 
-- [ ] **Step 5 : Écrire l'invitation, l'attente et l'écran de partie**
+- [x] **Step 5 : Écrire l'invitation, l'attente et l'écran de partie**
 
 **Fichier : `src/app/online/JoinScreen.tsx`**
 ```tsx
@@ -3371,7 +3371,7 @@ export function OnlineGameScreen<Pos, Move extends MoveShape>(props: OnlineGameS
 }
 ```
 
-- [ ] **Step 6 : Brancher les écrans dans l'app**
+- [x] **Step 6 : Brancher les écrans dans l'app**
 
 Dans `src/app/App.tsx` :
 - remplacer `import { useMemo, useState } from 'preact/hooks';` par `import { useMemo, useRef, useState } from 'preact/hooks';` ;
@@ -3445,16 +3445,16 @@ const ONLINE_ROUTES: readonly Route['name'][] = ['online', 'onlineGame', 'join']
   if (route.name === 'settings') {
 ```
 
-- [ ] **Step 7 : Lancer tous les tests, le typage et le build**
+- [x] **Step 7 : Lancer tous les tests, le typage et le build**
 
 Run : `npx vitest run` puis `npx tsc -b` puis `npm run build`
 Expected : PASS (dont 13 tests d'écrans en ligne, 3 routes et 1 test d'adresses de plus, libellé et bouton « En ligne »), aucune erreur de typage, build réussi.
 
-- [ ] **Step 8 : Vérifier dans le navigateur**
+- [x] **Step 8 : Vérifier dans le navigateur**
 
 Lancer le serveur de développement (`jeux-dev`), ouvrir `http://localhost:5173/#/echecs`, toucher « En ligne », choisir un pseudo, créer une partie : le code s'affiche. Ouvrir un second onglet sur `#/rejoindre/<code>` avec un autre pseudo : les deux onglets partagent la même session anonyme (même stockage), donc l'arrivée mène simplement à la partie de l'onglet 1 — c'est attendu ; le vrai test à deux joueurs est la Tâche 7. Vérifier l'absence d'erreur dans la console.
 
-- [ ] **Step 9 : Commit**
+- [x] **Step 9 : Commit**
 
 ```bash
 git add src tests vite.config.ts
@@ -3475,7 +3475,7 @@ git commit -m "feat: écrans du jeu en ligne (créer, rejoindre, inviter, jouer,
 
 Chaque téléphone est un contexte Playwright séparé (stockage séparé : deux joueurs anonymes différents). La coupure réseau utilise `context.setOffline`.
 
-- [ ] **Step 1 : Écrire la configuration et le scénario**
+- [x] **Step 1 : Écrire la configuration et le scénario**
 
 **Fichier : `playwright.online.config.ts`**
 ```ts
@@ -3585,17 +3585,17 @@ test('deux amis jouent une partie complète, coupure réseau comprise', async ({
 });
 ```
 
-- [ ] **Step 2 : Lancer le scénario**
+- [x] **Step 2 : Lancer le scénario**
 
 Run : `npm run e2e:online`
 Expected : 1 test PASS. En cas d'échec, lire la trace (`npx playwright show-trace test-results/…/trace.zip`) et corriger le code de l'app, pas le scénario (sauf libellé erroné dans le scénario).
 
-- [ ] **Step 3 : Vérifier que les scénarios hors ligne restent verts**
+- [x] **Step 3 : Vérifier que les scénarios hors ligne restent verts**
 
 Run : `npm run e2e`
 Expected : 10 tests PASS.
 
-- [ ] **Step 4 : Commit**
+- [x] **Step 4 : Commit**
 
 ```bash
 git add playwright.online.config.ts tests/e2e-online package.json tsconfig.node.json
@@ -3614,7 +3614,7 @@ git commit -m "test: deux téléphones en ligne de bout en bout (invitation, dir
 - Consumes: tout ce qui précède ; variables du dépôt `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
 - Produces : l'app en ligne à `https://jeaneveillard.github.io/Jeux-KZO/` ; CI (typage, tests, build) sur chaque Pull Request.
 
-- [ ] **Step 1 : Base de publication configurable**
+- [x] **Step 1 : Base de publication configurable**
 
 Dans `vite.config.ts` :
 - remplacer `export default defineConfig({` par :
@@ -3627,14 +3627,14 @@ export default defineConfig({
 ```
 - supprimer la ligne `        start_url: '/',` du manifeste (le module PWA prend alors la base comme adresse de départ et comme portée).
 
-- [ ] **Step 2 : Vérifier le build publié sous `/Jeux-KZO/`**
+- [x] **Step 2 : Vérifier le build publié sous `/Jeux-KZO/`**
 
 Run (Bash ; sous Git Bash pour Windows, préfixer `MSYS_NO_PATHCONV=1` pour que `/Jeux-KZO/` ne soit pas converti en chemin disque) : `BASE_PATH=/Jeux-KZO/ npm run build && grep -o '"start_url":"[^"]*"' dist/manifest.webmanifest && grep -o 'href="/Jeux-KZO/[^"]*"' dist/index.html | head -3`
 Expected : `"start_url":"/Jeux-KZO/"`, et les liens de `index.html` commencent par `/Jeux-KZO/`.
 
 Puis servir ce build : `BASE_PATH=/Jeux-KZO/ npx vite preview --port 4175 --strictPort` (en arrière-plan) et ouvrir `http://localhost:4175/Jeux-KZO/` dans le navigateur intégré : l'accueil s'affiche, une partie contre l'ordinateur au niveau Moyen répond à `e2e4` (Stockfish trouvé sous la base), la console ne montre pas d'erreur 404. Arrêter le serveur, puis `npm run build` pour remettre un build standard.
 
-- [ ] **Step 3 : Écrire le flux GitHub Actions**
+- [x] **Step 3 : Écrire le flux GitHub Actions**
 
 **Fichier : `.github/workflows/pages.yml`**
 ```yaml
@@ -3690,7 +3690,7 @@ jobs:
         uses: actions/deploy-pages@v5
 ```
 
-- [ ] **Step 4 : Tests complets, puis commit**
+- [x] **Step 4 : Tests complets, puis commit**
 
 Run : `npx tsc -b` puis `npm run test:coverage` puis `npm run build`
 Expected : PASS, couverture ≥ 80 %, build réussi.
@@ -3761,3 +3761,26 @@ Attendre la fin du flux sur `main` (`gh run watch`), puis ouvrir `https://jeanev
 | §7 Tests unitaires, `test:online`, `e2e:online`, e2e hors ligne verts | 1–7 |
 
 Écarts assumés par rapport au texte de la conception : les phrases d'état sont neutres (« C'est à Bob de jouer (hors ligne pour l'instant) » plutôt que « Au tour de Marie » / « elle verra ton coup »), conformément à la règle de formulation neutre ; la liste dit « En attente de ton ami » ; la présence et les changements de la partie passent par un seul canal privé `partie:<id>`.
+
+## Écarts constatés à l'exécution
+
+- **Migration (Tâche 4)** : deux erreurs PL/pgSQL corrigées avant application. Une variable `resultat` homonyme d'une colonne a été renommée `fin`. Un `case when … then` dans une condition `if … then` a été mis entre parenthèses, sinon le `then` du `case` coupe la condition.
+- **Réglages Supabase** : les deux interrupteurs du tableau de bord ne comptent qu'après « Save changes ». La connexion anonyme a été vérifiée côté serveur (`/auth/v1/settings`). Le blocage des canaux publics n'était pas encore enregistré à la fin de la Tâche 7. L'app n'utilise que des canaux privés, ce qui ne change donc rien à son fonctionnement.
+- **Relecture de sécurité de la base** : seconde migration `20260926010000_limites.sql`.
+  - Table interne `essais_code`, pour un maximum de 20 codes inconnus par joueur et par tranche de 10 minutes (erreur `trop_d_essais`).
+  - `rejoindre_partie` renvoie désormais une liste (`setof`) : aucune ligne pour un code inconnu, afin que l'essai reste compté sans exception. `OnlineApi.joinGame` traduit une liste vide en `code_inconnu`.
+  - Verrou consultatif par joueur dans `creer_partie`, pour que deux créations simultanées ne dépassent pas le plafond de 20.
+  - Nettoyage quotidien des essais.
+  - Écartés : collision de codes (négligeable), `replica identity full` (l'app n'écoute pas les suppressions).
+- **Relecture du code** :
+  - Le coup en attente mémorise le nombre de coups confirmés à l'envoi. Une notification arrivée avant la réponse du serveur ne le compte plus deux fois, ce qui affichait à tort « Coup invalide reçu ».
+  - `newerGame` garde la version la plus récente d'une partie quand une relecture lente arrive en retard.
+  - Délai maximal de 15 s par requête (`indisponible`).
+  - « Revanche » et « Annuler la partie » passent par `busy` ; boutons désactivés pendant la requête (prop `busy` d'`EndDialog` et de `WaitingRoom`).
+- **Temps réel (Tâche 7)** : un premier passage du scénario à deux téléphones a échoué, l'arrivée de Bob n'étant pas vue par Alice. La partie est maintenant aussi relue au message système « Subscribed to PostgreSQL », qui signale le début effectif de l'écoute de la table, un peu après l'abonnement au canal. Le scénario passe ensuite 3 fois sur 3.
+- **Tests de hook** : les états « coup en attente retiré » et « message » sont regroupés dans une seule mise à jour, ce qui supprime un test intermittent.
+- **Build `/Jeux-KZO/`** :
+  - Sous Git Bash, `MSYS_NO_PATHCONV=1` est nécessaire pour que la base ne soit pas convertie en chemin disque (sans effet sur la CI Linux).
+  - Le navigateur intégré de l'app de bureau refuse d'enregistrer un service worker. La vérification a été faite avec Chromium (Playwright) : service worker installé sous `/Jeux-KZO/`, app fonctionnelle hors ligne.
+- **Chargement à la demande** : le morceau séparé `client-*.js` (Supabase) n'apparaît au build qu'une fois les écrans branchés (Tâche 6), et non dès la Tâche 3.
+
