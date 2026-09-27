@@ -38,49 +38,57 @@ function ExerciseView<Pos, Move extends MoveShape>({ kit, exercise, index, total
 
   return (
     <>
-      <p class="muted">
-        Exercice {index + 1} / {total}
-      </p>
-      <p class="card">{exercise.instruction}</p>
-      <div class="board-wrap">
-        <Board
-          geometry={geometry}
-          pieces={kit.boardPieces(ex.run.pos)}
-          selected={ex.input.selected}
-          targets={targetsOf(ex.input.selected, ex.legal)}
-          highlights={ex.last ? [ex.last.from, ex.last.to] : []}
-          check={kit.checkSquare(ex.run.pos)}
-          stars={ex.run.remainingStars}
-          onSquareTap={ex.tap}
-          onDrop={ex.drop}
-          canDrag={(square) => ex.legal.some((move) => move.from === square)}
-        />
-      </div>
-      {ex.thinking && <p class="status-line thinking">L'ordinateur réfléchit…</p>}
-      {ex.run.feedback && (
-        <p class={`feedback feedback-${ex.run.feedback.tone}`} role="status">
-          {ex.run.feedback.text}
-        </p>
-      )}
-      {ex.engineError && (
-        <div class="banner" role="alert">
-          <span>{ex.engineError}</span>
-          <button type="button" class="btn btn-small" onClick={ex.retryEngine}>
-            Réessayer
-          </button>
+      <div class="game-layout">
+        <div class="game-info">
+          <p class="muted">
+            Exercice {index + 1} / {total}
+          </p>
+          <p class="card">{exercise.instruction}</p>
         </div>
-      )}
-      <div class="actions">
-        {!solved && (
-          <button type="button" class="btn btn-small" onClick={ex.restart}>
-            {failed ? 'Réessayer' : 'Recommencer'}
-          </button>
-        )}
-        {solved && (
-          <button type="button" class="btn btn-primary" onClick={onNext}>
-            {index + 1 < total ? 'Exercice suivant' : 'Terminer la leçon'}
-          </button>
-        )}
+        <div class="game-board">
+          <div class="board-wrap">
+            <Board
+              geometry={geometry}
+              pieces={kit.boardPieces(ex.run.pos)}
+              selected={ex.input.selected}
+              targets={targetsOf(ex.input.selected, ex.legal)}
+              highlights={ex.last ? [ex.last.from, ex.last.to] : []}
+              check={kit.checkSquare(ex.run.pos)}
+              stars={ex.run.remainingStars}
+              onSquareTap={ex.tap}
+              onDrop={ex.drop}
+              canDrag={(square) => ex.legal.some((move) => move.from === square)}
+            />
+          </div>
+        </div>
+        <div class="game-rest">
+          {ex.thinking && <p class="status-line thinking">L'ordinateur réfléchit…</p>}
+          {ex.run.feedback && (
+            <p class={`feedback feedback-${ex.run.feedback.tone}`} role="status">
+              {ex.run.feedback.text}
+            </p>
+          )}
+          {ex.engineError && (
+            <div class="banner" role="alert">
+              <span>{ex.engineError}</span>
+              <button type="button" class="btn btn-small" onClick={ex.retryEngine}>
+                Réessayer
+              </button>
+            </div>
+          )}
+          <div class="actions">
+            {!solved && (
+              <button type="button" class="btn btn-small" onClick={ex.restart}>
+                {failed ? 'Réessayer' : 'Recommencer'}
+              </button>
+            )}
+            {solved && (
+              <button type="button" class="btn btn-primary" onClick={onNext}>
+                {index + 1 < total ? 'Exercice suivant' : 'Terminer la leçon'}
+              </button>
+            )}
+          </div>
+        </div>
       </div>
       {ex.choices && (
         <ChoicePicker color={kit.lessonRules.turn(ex.run.pos)} choices={ex.choices} onPick={ex.choose} onCancel={ex.cancelChoice} />
@@ -136,7 +144,7 @@ export function LessonScreen<Pos, Move extends MoveShape>({ kit, lesson, nextLes
   }
 
   return (
-    <section class="screen">
+    <section class="screen screen-game">
       {header}
       <ExerciseView
         key={step}

@@ -48,59 +48,65 @@ export function PlayScreen<Pos, Move extends MoveShape>(props: PlayScreenProps<P
   }, [finished]);
 
   return (
-    <section class="screen">
+    <section class="screen screen-game">
       <header class="topbar">
         <button type="button" class="back" aria-label="Retour au menu" onClick={props.onExit}>
           ←
         </button>
         <h1>{modeTitle(session.setup)}</h1>
       </header>
-      {props.notice && <p class="feedback feedback-info">{props.notice}</p>}
-      <BoardView
-        kit={kit}
-        position={position}
-        bottom={bottom}
-        legal={game.legal}
-        input={game.input}
-        last={last}
-        arrow={game.hint?.move ?? null}
-        choices={game.choices}
-        onTap={game.tap}
-        onDrop={game.drop}
-        onChoose={game.choose}
-        onCancelChoice={game.cancelChoice}
-      />
-      <p class="status-line" role="status">
-        {statusText(kit, game)}
-      </p>
-      {game.hint && <p class="feedback feedback-info">💡 {game.hint.text}</p>}
-      {game.engineError && (
-        <div class="banner" role="alert">
-          <span>{game.engineError}</span>
-          <button type="button" class="btn btn-small" onClick={game.retryEngine}>
-            Réessayer
-          </button>
+      <div class="game-layout">
+        <div class="game-info">{props.notice && <p class="feedback feedback-info">{props.notice}</p>}</div>
+        <div class="game-board">
+          <BoardView
+            kit={kit}
+            position={position}
+            bottom={bottom}
+            legal={game.legal}
+            input={game.input}
+            last={last}
+            arrow={game.hint?.move ?? null}
+            choices={game.choices}
+            onTap={game.tap}
+            onDrop={game.drop}
+            onChoose={game.choose}
+            onCancelChoice={game.cancelChoice}
+          />
         </div>
-      )}
-      <div class="actions">
-        {game.faibleHelp && (
-          <button type="button" class="btn btn-small" onClick={game.requestHint} disabled={!game.humanTurn || game.checking}>
-            Indice
-          </button>
-        )}
-        {game.faibleHelp && (
-          <button type="button" class="btn btn-small" onClick={game.undo} disabled={!game.undoAvailable}>
-            Annuler
-          </button>
-        )}
-        {!finished && (
-          <button type="button" class="btn btn-small btn-danger" onClick={() => setConfirmResign(true)} disabled={game.checking}>
-            Abandonner
-          </button>
-        )}
-        <button type="button" class="btn btn-small" onClick={props.onNewGame}>
-          Nouvelle partie
-        </button>
+        <div class="game-rest">
+          <p class="status-line" role="status">
+            {statusText(kit, game)}
+          </p>
+          {game.hint && <p class="feedback feedback-info">💡 {game.hint.text}</p>}
+          {game.engineError && (
+            <div class="banner" role="alert">
+              <span>{game.engineError}</span>
+              <button type="button" class="btn btn-small" onClick={game.retryEngine}>
+                Réessayer
+              </button>
+            </div>
+          )}
+          <div class="actions">
+            {game.faibleHelp && (
+              <button type="button" class="btn btn-small" onClick={game.requestHint} disabled={!game.humanTurn || game.checking}>
+                Indice
+              </button>
+            )}
+            {game.faibleHelp && (
+              <button type="button" class="btn btn-small" onClick={game.undo} disabled={!game.undoAvailable}>
+                Annuler
+              </button>
+            )}
+            {!finished && (
+              <button type="button" class="btn btn-small btn-danger" onClick={() => setConfirmResign(true)} disabled={game.checking}>
+                Abandonner
+              </button>
+            )}
+            <button type="button" class="btn btn-small" onClick={props.onNewGame}>
+              Nouvelle partie
+            </button>
+          </div>
+        </div>
       </div>
       {game.blunder && (
         <ConfirmDialog
