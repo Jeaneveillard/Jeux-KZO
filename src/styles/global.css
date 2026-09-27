@@ -101,6 +101,34 @@ p { margin: 6px 0; }
 .promotion button { background: var(--bg); border: 2px solid var(--border); border-radius: 10px; padding: 6px; cursor: pointer; }
 .promotion img { width: 100%; height: auto; display: block; }
 
+/* Écrans de jeu : sur téléphone, ces blocs s'effacent (l'ordre reste celui du code) ; sur grand écran, ils forment deux colonnes. */
+.game-layout, .game-info, .game-board, .game-rest { display: contents; }
+
+@media (min-width: 900px) {
+  #app { max-width: 1320px; padding-left: 32px; padding-right: 32px; }
+  .screen { width: 100%; max-width: 640px; margin: 0 auto; }
+  .screen-game {
+    /* Plateau aussi grand que possible : limité par la hauteur de la fenêtre, puis par la place laissée à la colonne de droite. */
+    --board-size: clamp(320px, min(calc(100dvh - 190px), calc(100vw - 420px)), 840px);
+    max-width: none;
+  }
+  .screen-game > .topbar { width: min(100%, calc(var(--board-size) + 412px)); margin: 0 auto; }
+  .game-layout {
+    display: grid;
+    grid-template-columns: var(--board-size) minmax(280px, 380px);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'board info' 'board rest';
+    gap: 12px 32px;
+    justify-content: center;
+    align-items: start;
+  }
+  .game-board { grid-area: board; display: flex; flex-direction: column; gap: 8px; }
+  .game-info, .game-rest { display: flex; flex-direction: column; gap: 12px; }
+  .game-info { grid-area: info; }
+  .game-rest { grid-area: rest; }
+  .game-board .board-wrap { max-width: none; }
+}
+
 .lesson-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .lesson-done { color: var(--success); font-weight: 700; margin-left: 6px; }
 .intro p { font-size: 1.05rem; }

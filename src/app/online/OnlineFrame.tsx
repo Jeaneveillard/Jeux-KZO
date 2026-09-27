@@ -6,12 +6,14 @@ interface OnlineFrameProps {
   readonly backLabel: string;
   readonly onBack: () => void;
   readonly children: ComponentChildren;
+  /** Écran de jeu : plateau et informations côte à côte sur grand écran. */
+  readonly wide?: boolean;
 }
 
 /** Cadre commun des écrans en ligne : barre du haut avec retour. */
-export function OnlineFrame({ title, backLabel, onBack, children }: OnlineFrameProps) {
+export function OnlineFrame({ title, backLabel, onBack, children, wide = false }: OnlineFrameProps) {
   return (
-    <section class="screen">
+    <section class={wide ? 'screen screen-game' : 'screen'}>
       <header class="topbar">
         <button type="button" class="back" aria-label={backLabel} onClick={onBack}>
           ←

@@ -69,8 +69,8 @@ export function OnlineGameScreen<Pos, Move extends MoveShape>(props: OnlineGameS
   const [endDismissed, setEndDismissed] = useState(false);
   const { game, view } = online;
   const toList = () => onNavigate({ name: 'online', game: kit.id });
-  const frame = (content: ComponentChildren) => (
-    <OnlineFrame title={`${kit.title} en ligne`} backLabel="Retour à mes parties" onBack={toList}>
+  const frame = (content: ComponentChildren, wide = false) => (
+    <OnlineFrame title={`${kit.title} en ligne`} backLabel="Retour à mes parties" onBack={toList} wide={wide}>
       {content}
     </OnlineFrame>
   );
@@ -126,69 +126,77 @@ export function OnlineGameScreen<Pos, Move extends MoveShape>(props: OnlineGameS
 
   return frame(
     <>
-      <Players game={game} myColor={view.myColor} opponentOnline={online.opponentOnline} />
-      <BoardView
-        kit={kit}
-        position={currentPosition(view.session)}
-        bottom={view.myColor ?? 'white'}
-        legal={online.legal}
-        input={online.input.input}
-        last={lastMove(view.session)}
-        choices={online.input.choices}
-        onTap={online.input.tap}
-        onDrop={online.input.drop}
-        onChoose={online.input.choose}
-        onCancelChoice={online.input.cancelChoice}
-      />
-      {status}
-      {online.notice && (
-        <p class="feedback feedback-info" role="alert">
-          {online.notice}
-        </p>
-      )}
-      {offerFromFriend && (
-        <div class="card">
-          <p>{view.opponentName} propose la nulle.</p>
-          <div class="actions">
-            <button type="button" class="btn btn-small btn-primary" disabled={online.busy} onClick={() => online.answerDraw(true)}>
-              Accepter
-            </button>
-            <button type="button" class="btn btn-small" disabled={online.busy} onClick={() => online.answerDraw(false)}>
-              Refuser
-            </button>
-          </div>
+      <div class="game-layout">
+        <div class="game-info">
+          <Players game={game} myColor={view.myColor} opponentOnline={online.opponentOnline} />
         </div>
-      )}
-      {playing && game.drawOfferedBy === view.myColor && (
-        <p class="feedback feedback-info">Nulle proposée : {view.opponentName} peut accepter ou refuser.</p>
-      )}
-      {!dialogOpen && (
-        <div class="actions">
-          {playing && (
-            <button
-              type="button"
-              class="btn btn-small"
-              onClick={online.offerDraw}
-              disabled={online.busy || !online.connected || game.drawOfferedBy !== null || view.invalidMove}
-            >
-              Proposer la nulle
-            </button>
-          )}
-          {playing && (
-            <button type="button" class="btn btn-small btn-danger" onClick={() => setConfirmResign(true)} disabled={online.busy || !online.connected}>
-              Abandonner
-            </button>
-          )}
-          {finished && (
-            <button type="button" class="btn btn-small btn-primary" onClick={rematch} disabled={online.busy}>
-              {game.rematchCode ? 'Jouer la revanche' : 'Revanche'}
-            </button>
-          )}
-          <button type="button" class="btn btn-small" onClick={toList}>
-            Menu
-          </button>
+        <div class="game-board">
+          <BoardView
+            kit={kit}
+            position={currentPosition(view.session)}
+            bottom={view.myColor ?? 'white'}
+            legal={online.legal}
+            input={online.input.input}
+            last={lastMove(view.session)}
+            choices={online.input.choices}
+            onTap={online.input.tap}
+            onDrop={online.input.drop}
+            onChoose={online.input.choose}
+            onCancelChoice={online.input.cancelChoice}
+          />
         </div>
-      )}
+        <div class="game-rest">
+          {status}
+          {online.notice && (
+            <p class="feedback feedback-info" role="alert">
+              {online.notice}
+            </p>
+          )}
+          {offerFromFriend && (
+            <div class="card">
+              <p>{view.opponentName} propose la nulle.</p>
+              <div class="actions">
+                <button type="button" class="btn btn-small btn-primary" disabled={online.busy} onClick={() => online.answerDraw(true)}>
+                  Accepter
+                </button>
+                <button type="button" class="btn btn-small" disabled={online.busy} onClick={() => online.answerDraw(false)}>
+                  Refuser
+                </button>
+              </div>
+            </div>
+          )}
+          {playing && game.drawOfferedBy === view.myColor && (
+            <p class="feedback feedback-info">Nulle proposée : {view.opponentName} peut accepter ou refuser.</p>
+          )}
+          {!dialogOpen && (
+            <div class="actions">
+              {playing && (
+                <button
+                  type="button"
+                  class="btn btn-small"
+                  onClick={online.offerDraw}
+                  disabled={online.busy || !online.connected || game.drawOfferedBy !== null || view.invalidMove}
+                >
+                  Proposer la nulle
+                </button>
+              )}
+              {playing && (
+                <button type="button" class="btn btn-small btn-danger" onClick={() => setConfirmResign(true)} disabled={online.busy || !online.connected}>
+                  Abandonner
+                </button>
+              )}
+              {finished && (
+                <button type="button" class="btn btn-small btn-primary" onClick={rematch} disabled={online.busy}>
+                  {game.rematchCode ? 'Jouer la revanche' : 'Revanche'}
+                </button>
+              )}
+              <button type="button" class="btn btn-small" onClick={toList}>
+                Menu
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
       {confirmResign && (
         <ConfirmDialog
           title="Abandonner ?"
@@ -214,5 +222,6 @@ export function OnlineGameScreen<Pos, Move extends MoveShape>(props: OnlineGameS
         />
       )}
     </>,
+    true,
   );
 }
