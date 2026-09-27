@@ -71,11 +71,15 @@ export function createSupabaseBackend(config: OnlineConfig): Backend {
     findGame: (code) => run(() => supabase.from('parties').select('*').eq('code', code).maybeSingle()),
     watch: (gameId, me, handlers) => {
       // Un seul canal privé : changements de la ligne (règles d'accès de la table) et présence (règles sur realtime.messages).
+      let stopped = false;
       const channel = supabase.channel(`partie:${gameId}`, { config: { private: true, presence: { key: me } } });
       channel
         .on('postgres_changes', { event: '*', schema: 'public', table: 'parties', filter: `id=eq.${gameId}` }, () => handlers.onChange())
-        .on('presence', { event: 'sync' }, () => handlers.onPresence(Object.keys(channel.presenceState())));
-      let stopped = false;
+        .on('presence', { event: 'sync' }, () => handlers.onPresence(Object.keys(channel.presenceState())))
+        // L'écoute de la table démarre un peu après l'abonnement : on relit la partie pour ne rien manquer entre les deux.
+        .on('system', {}, (payload: { extension?: string; status?: string }) => {
+          if (!stopped && payload.extension === 'postgres_changes' && payload.status === 'ok') handlers.onChange();
+        });
       void supabase.realtime.setAuth().then(() => {
         if (stopped) return;
         channel.subscribe(async (status) => {
